@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  Activity,
   ArrowDown,
   ArrowRight,
   CheckCircle2,
@@ -11,7 +10,6 @@ import {
   Gauge,
   HardDriveDownload,
   Layers,
-  Lock,
   RefreshCw,
   Server,
   ShieldAlert,
@@ -24,65 +22,12 @@ import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import dbmsIntroImg from '../assets/images/enterprise_database_infrastructure_1794909045366.jpg';
 import { PracticeArea, ScreenId } from '../data/apokrinData';
 import { useTheme } from '../theme/themeConfig';
+import { ServiceArchitectureDiagram3D } from './ServiceArchitectureDiagram3D';
 
 interface DatabaseManagementPageProps {
   onNavigate: (screen: ScreenId, practice?: PracticeArea, sectionId?: string) => void;
   onOpenBriefing: (practice?: PracticeArea, brief?: string) => void;
 }
-
-type HeroWorkbenchTab = 'administration' | 'continuity' | 'modernization';
-
-interface HeroWorkbenchView {
-  id: HeroWorkbenchTab;
-  label: string;
-  heading: string;
-  caption: string;
-  layers: { name: string; role: string }[];
-  throughputBars: number[];
-  floatingTop: [string, string];
-}
-
-const HERO_WORKBENCH_VIEWS: HeroWorkbenchView[] = [
-  {
-    id: 'administration',
-    label: 'Remote DBA',
-    heading: '24/7 Database Administration & Tuning',
-    caption: 'Proactive health diagnostics, query optimization, and hardened server setups across environments',
-    layers: [
-      { name: 'Proactive Monitoring', role: '24/7 incident watch' },
-      { name: 'Query & Index Tuning', role: 'Execution optimization' },
-      { name: 'App Server Integration', role: 'Low-latency pooling' },
-    ],
-    throughputBars: [62, 76, 84, 72, 90, 96],
-    floatingTop: ['24/7 Remote DBA', 'Proactive Uptime Control'],
-  },
-  {
-    id: 'continuity',
-    label: 'Replication & DR',
-    heading: 'High Availability & Business Continuity',
-    caption: 'Automated encrypted backups, multi-region replication, and verified disaster recovery playbooks',
-    layers: [
-      { name: 'Primary Node Sync', role: 'Real-time replication' },
-      { name: 'Automated Snapshots', role: 'Rapid point recovery' },
-      { name: 'DR Failover Plan', role: 'Operational resilience' },
-    ],
-    throughputBars: [70, 82, 78, 92, 88, 98],
-    floatingTop: ['Multi-Region Sync', 'Automated Backup & DR'],
-  },
-  {
-    id: 'modernization',
-    label: 'Cloud & Licensing',
-    heading: 'Architecture Modernization & Advisory',
-    caption: 'Smooth legacy-to-cloud migrations paired with compliant, cost-effective enterprise licensing',
-    layers: [
-      { name: 'Schema Migration', role: 'Zero-loss transition' },
-      { name: 'Hybrid Cloud Scale', role: 'Elastic workloads' },
-      { name: 'License Optimization', role: 'Cost governance' },
-    ],
-    throughputBars: [58, 74, 86, 80, 92, 95],
-    floatingTop: ['Cloud Integration', 'Architecture & Licensing'],
-  },
-];
 
 interface WhyChooseDbmsItem {
   id: string;
@@ -265,7 +210,6 @@ export function DatabaseManagementPage({
   const { themeConfig } = useTheme();
   const prefersReducedMotion = useReducedMotion();
 
-  const [activeHeroTab, setActiveHeroTab] = useState<HeroWorkbenchTab>('administration');
   const [activeWhyIdx, setActiveWhyIdx] = useState<number>(0);
   const [categoryFilter, setCategoryFilter] = useState<CapabilityCategoryFilter>('all');
   const [activeContinuityId, setActiveContinuityId] = useState<string>(
@@ -273,8 +217,6 @@ export function DatabaseManagementPage({
   );
   const [introImgFailed, setIntroImgFailed] = useState<boolean>(false);
 
-  const heroView =
-    HERO_WORKBENCH_VIEWS.find((v) => v.id === activeHeroTab) ?? HERO_WORKBENCH_VIEWS[0];
   const activeWhy = WHY_CHOOSE_ITEMS[activeWhyIdx] ?? WHY_CHOOSE_ITEMS[0];
   const activeContinuity =
     CONTINUITY_CAPABILITIES.find((c) => c.id === activeContinuityId) ??
@@ -347,168 +289,17 @@ export function DatabaseManagementPage({
               </div>
             </motion.div>
 
-            {/* Right Column: Interactive Claymorphism Database Operations Workbench */}
+            {/* Right Column: Interactive 3D Database Cluster & Replication Diagram */}
             <motion.div
               initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
               className="relative lg:col-span-6"
             >
-              {/* Floating Top-Left Mini Clay Badge */}
-              <div
-                aria-hidden="true"
-                className="apokrin-clay-bob-0 pointer-events-none absolute -left-3 -top-4 z-20 hidden rounded-2xl border border-white/95 bg-white/92 px-3.5 py-2.5 shadow-[0_14px_30px_-10px_rgba(15,23,42,0.16)] backdrop-blur-md sm:flex sm:items-center sm:gap-2.5"
-              >
-                <div
-                  className="flex h-8 w-8 items-center justify-center rounded-xl text-white"
-                  style={{ background: 'var(--color-btn-gradient)' }}
-                >
-                  <Database className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="font-display text-xs font-bold text-[#0A1128]">
-                    {heroView.floatingTop[0]}
-                  </p>
-                  <p className="text-[11px] text-[#64748B]">{heroView.floatingTop[1]}</p>
-                </div>
-              </div>
-
-              {/* Floating Bottom-Right Mini Clay Badge */}
-              <div
-                aria-hidden="true"
-                className="apokrin-clay-bob-1 pointer-events-none absolute -bottom-4 -right-2 z-20 hidden rounded-2xl border border-white/95 bg-white/92 px-3.5 py-2.5 shadow-[0_14px_30px_-10px_rgba(15,23,42,0.16)] backdrop-blur-md sm:flex sm:items-center sm:gap-2.5"
-              >
-                <div
-                  className="flex h-8 w-8 items-center justify-center rounded-xl"
-                  style={{
-                    backgroundColor: 'var(--color-surface-soft)',
-                    color: 'var(--color-primary-strong)',
-                  }}
-                >
-                  <Lock className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="font-display text-xs font-bold text-[#0A1128]">
-                    Data Integrity Ready
-                  </p>
-                  <p className="text-[11px] text-[#64748B]">Hardened Security &amp; DR</p>
-                </div>
-              </div>
-
-              {/* Main Interactive Workbench Panel */}
-              <div className="apokrin-clay-panel relative rounded-[2rem] border border-white/95 p-5 sm:p-6">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E2E8F0] pb-3.5">
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wider text-[#64748B]">
-                      Database Operations Studio
-                    </p>
-                    <h2 className="mt-0.5 font-display text-sm font-bold text-[#0A1128] sm:text-base">
-                      {heroView.heading}
-                    </h2>
-                  </div>
-
-                  <div
-                    role="tablist"
-                    aria-label="Database operations domain"
-                    className="inline-flex items-center gap-1 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-1"
-                  >
-                    {HERO_WORKBENCH_VIEWS.map((view) => {
-                      const isActive = view.id === activeHeroTab;
-                      return (
-                        <button
-                          key={view.id}
-                          type="button"
-                          role="tab"
-                          aria-selected={isActive}
-                          onClick={() => setActiveHeroTab(view.id)}
-                          className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary-strong)] ${
-                            isActive
-                              ? 'bg-white text-[#0A1128] shadow-sm'
-                              : 'text-[#64748B] hover:text-[#0A1128]'
-                          }`}
-                          style={isActive ? { color: themeConfig.primaryStrong } : undefined}
-                        >
-                          {view.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={heroView.id}
-                    initial={prefersReducedMotion ? false : { opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={prefersReducedMotion ? undefined : { opacity: 0, y: -4 }}
-                    transition={{ duration: 0.2 }}
-                    className="mt-4 space-y-4"
-                  >
-                    <p className="text-xs leading-relaxed text-[#475569]">{heroView.caption}</p>
-
-                    {/* 3 Architecture Tiers */}
-                    <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
-                      {heroView.layers.map((layer, idx) => (
-                        <div
-                          key={layer.name}
-                          className="rounded-2xl border border-[#E2E8F0] bg-white p-3.5 shadow-sm"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span
-                              className="font-mono text-[11px] font-bold"
-                              style={{ color: themeConfig.primaryStrong }}
-                            >
-                              0{idx + 1}
-                            </span>
-                            <Activity
-                              className="h-3.5 w-3.5"
-                              style={{ color: themeConfig.secondaryText }}
-                              aria-hidden="true"
-                            />
-                          </div>
-                          <p className="mt-2 font-display text-xs font-bold text-[#0A1128]">
-                            {layer.name}
-                          </p>
-                          <p className="mt-0.5 text-[11px] text-[#64748B]">{layer.role}</p>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Dark Cluster Topology Bar Preview */}
-                    <div className="rounded-2xl bg-[#0A1128] p-4 text-white">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-semibold text-slate-200">
-                          Cluster Availability &amp; Query Posture
-                        </span>
-                        <span className="font-mono text-[11px] text-slate-400">
-                          Encrypted · Synchronized
-                        </span>
-                      </div>
-
-                      <div className="mt-3 flex h-16 items-end gap-2">
-                        {heroView.throughputBars.map((val, i) => (
-                          <motion.div
-                            key={`${heroView.id}-${i}`}
-                            initial={false}
-                            animate={{ height: `${val}%` }}
-                            transition={{
-                              duration: prefersReducedMotion ? 0 : 0.4,
-                              delay: i * 0.03,
-                              ease: [0.16, 1, 0.3, 1],
-                            }}
-                            className="flex-1 rounded-t-md"
-                            style={{
-                              background:
-                                i % 2 === 0 ? 'var(--color-btn-gradient)' : themeConfig.accent,
-                              opacity: i % 2 === 0 ? 1 : 0.72,
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
+              <ServiceArchitectureDiagram3D
+                variant="database"
+                prefersReducedMotion={Boolean(prefersReducedMotion)}
+              />
             </motion.div>
           </div>
         </div>

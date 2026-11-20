@@ -25,71 +25,12 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { PracticeArea, ScreenId } from '../data/apokrinData';
 import { useTheme } from '../theme/themeConfig';
+import { ServiceArchitectureDiagram3D } from './ServiceArchitectureDiagram3D';
 
 interface ApplicationDevelopmentPageProps {
   onNavigate: (screen: ScreenId, practice?: PracticeArea, sectionId?: string) => void;
   onOpenBriefing: (practice?: PracticeArea, brief?: string) => void;
 }
-
-type HeroTabId = 'web' | 'mobile' | 'pipeline';
-
-interface HeroWorkspaceConfig {
-  id: HeroTabId;
-  label: string;
-  fileName: string;
-  codeLines: string[];
-  mobileTitle: string;
-  mobileTagline: string;
-  componentCards: [string, string];
-}
-
-const HERO_WORKSPACES: HeroWorkspaceConfig[] = [
-  {
-    id: 'web',
-    label: 'Web App',
-    fileName: 'src/modules/OrderPortal.tsx',
-    codeLines: [
-      'export async function syncEnterpriseOrder(ctx: AppContext) {',
-      '  const session = await verifyTenantBoundary(ctx.token);',
-      '  const workflow = buildModularPipeline(session.orgId);',
-      '  return workflow.dispatch({ resilient: true });',
-      '}',
-    ],
-    mobileTitle: 'Enterprise Web Portal',
-    mobileTagline: 'Responsive UI & API Sync',
-    componentCards: ['Modular UI Architecture', 'Type-Safe Data Contracts'],
-  },
-  {
-    id: 'mobile',
-    label: 'Mobile API',
-    fileName: 'mobile/NativeGateway.swift',
-    codeLines: [
-      'struct NativeSyncCoordinator: PlatformBridge {',
-      '  func hydrateOfflineQueue(device: DeviceProfile) {',
-      '    let policy = SecurityPolicy.enforced(device)',
-      '    apiClient.streamEncryptedEvents(policy: policy)',
-      '  }',
-      '}',
-    ],
-    mobileTitle: 'iOS & Android Native',
-    mobileTagline: 'Cross-Device Experience',
-    componentCards: ['Native iOS & Android', 'Cross-Device QA Ready'],
-  },
-  {
-    id: 'pipeline',
-    label: 'CI/CD Pipeline',
-    fileName: 'deploy/release-checks.yml',
-    codeLines: [
-      'stages: [build, unit_qa, security_scan, deploy]',
-      'qa_matrix: [ios_arm64, android_api35, web_chromium]',
-      'rollout_strategy: zero_downtime_canary',
-      'post_release: continuous_telemetry_active',
-    ],
-    mobileTitle: 'Automated Delivery',
-    mobileTagline: 'Validated Release Gate',
-    componentCards: ['Automated QA Gates', 'Zero-Downtime Rollout'],
-  },
-];
 
 const ARCH_STACK_LAYERS = [
   {
@@ -284,15 +225,12 @@ export function ApplicationDevelopmentPage({
   const { themeConfig } = useTheme();
   const prefersReducedMotion = useReducedMotion();
 
-  const [activeHeroTab, setActiveHeroTab] = useState<HeroTabId>('web');
   const [activeArchLayer, setActiveArchLayer] = useState<number>(0);
   const [activeWhyIndex, setActiveWhyIndex] = useState<number>(0);
   const [capabilityFilter, setCapabilityFilter] = useState<CapabilityGroupFilter>('all');
   const [activePlatformId, setActivePlatformId] = useState<PlatformCapability['id']>('ios');
   const [activeLifecycleIdx, setActiveLifecycleIdx] = useState<number>(0);
 
-  const heroWorkspace =
-    HERO_WORKSPACES.find((item) => item.id === activeHeroTab) ?? HERO_WORKSPACES[0];
   const activePlatform =
     MOBILE_WEB_CAPABILITIES.find((item) => item.id === activePlatformId) ??
     MOBILE_WEB_CAPABILITIES[0];
@@ -366,171 +304,17 @@ export function ApplicationDevelopmentPage({
               </div>
             </motion.div>
 
-            {/* Right Column: Interactive Code Window + Floating UI & Mobile Mockup */}
+            {/* Right Column: Interactive 3D Application Architecture Diagram */}
             <motion.div
               initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
               className="relative lg:col-span-6"
             >
-              {/* Floating Top-Left UI Component Block */}
-              <div
-                aria-hidden="true"
-                className="apokrin-clay-bob-1 pointer-events-none absolute -left-3 -top-5 z-20 hidden rounded-2xl border border-white/95 bg-white/92 px-3.5 py-2.5 shadow-[0_14px_32px_-10px_rgba(15,23,42,0.16)] backdrop-blur-md sm:flex sm:items-center sm:gap-2.5"
-              >
-                <div
-                  className="flex h-8 w-8 items-center justify-center rounded-xl text-white"
-                  style={{ background: 'var(--color-btn-gradient)' }}
-                >
-                  <Blocks className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="font-display text-xs font-bold text-[#0A1128]">
-                    {heroWorkspace.componentCards[0]}
-                  </p>
-                  <p className="text-[11px] text-[#64748B]">{heroWorkspace.componentCards[1]}</p>
-                </div>
-              </div>
-
-              {/* Main Software Workbench Canvas */}
-              <div className="apokrin-clay-panel relative rounded-[2rem] border border-white/95 p-5 sm:p-7">
-                {/* Interactive Target Tabs */}
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E2E8F0] pb-4">
-                  <div className="flex items-center gap-2">
-                    <Code2
-                      className="h-4.5 w-4.5"
-                      style={{ color: themeConfig.primaryStrong }}
-                      aria-hidden="true"
-                    />
-                    <span className="font-display text-sm font-bold text-[#0A1128]">
-                      Engineering Studio
-                    </span>
-                  </div>
-
-                  <div
-                    role="tablist"
-                    aria-label="Preview application engineering layer"
-                    className="inline-flex items-center gap-1 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-1"
-                  >
-                    {HERO_WORKSPACES.map((ws) => {
-                      const active = ws.id === activeHeroTab;
-                      return (
-                        <button
-                          key={ws.id}
-                          type="button"
-                          role="tab"
-                          aria-selected={active}
-                          onClick={() => setActiveHeroTab(ws.id)}
-                          className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary-strong)] ${
-                            active ? 'bg-white shadow-sm' : 'text-[#64748B] hover:text-[#0A1128]'
-                          }`}
-                          style={active ? { color: themeConfig.primaryStrong } : undefined}
-                        >
-                          {ws.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Code Snippet Panel + Embedded Device Preview */}
-                <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-12">
-                  {/* Dark IDE Snippet Frame */}
-                  <div className="rounded-2xl bg-[#0F172A] p-4 text-slate-200 shadow-inner sm:col-span-8">
-                    <div className="flex items-center justify-between border-b border-slate-800 pb-2.5">
-                      <div className="flex items-center gap-1.5" aria-hidden="true">
-                        <span className="h-2.5 w-2.5 rounded-full bg-slate-600" />
-                        <span className="h-2.5 w-2.5 rounded-full bg-slate-600" />
-                        <span className="h-2.5 w-2.5 rounded-full bg-slate-600" />
-                      </div>
-                      <span className="font-mono text-[11px] text-slate-400">
-                        {heroWorkspace.fileName}
-                      </span>
-                    </div>
-
-                    <AnimatePresence mode="wait">
-                      <motion.pre
-                        key={heroWorkspace.id}
-                        initial={prefersReducedMotion ? false : { opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={prefersReducedMotion ? undefined : { opacity: 0 }}
-                        transition={{ duration: 0.2 }}
-                        className="mt-3 overflow-x-auto font-mono text-[11.5px] leading-relaxed text-slate-200"
-                      >
-                        {heroWorkspace.codeLines.map((line, i) => (
-                          <div key={i} className="flex gap-3">
-                            <span className="select-none text-slate-500 tabular-nums">{i + 1}</span>
-                            <code className="whitespace-pre">{line}</code>
-                          </div>
-                        ))}
-                      </motion.pre>
-                    </AnimatePresence>
-                  </div>
-
-                  {/* Floating-Feel Responsive Device Preview */}
-                  <div className="apokrin-clay-bob-0 flex flex-col justify-between rounded-2xl border border-[#E2E8F0] bg-white p-3.5 shadow-sm sm:col-span-4">
-                    <div className="flex items-center justify-between">
-                      <span
-                        className="rounded-md px-2 py-0.5 text-[10px] font-bold"
-                        style={{
-                          backgroundColor: 'var(--color-surface-soft)',
-                          color: themeConfig.primaryStrong,
-                        }}
-                      >
-                        Preview
-                      </span>
-                      <Smartphone
-                        className="h-4 w-4"
-                        style={{ color: themeConfig.secondaryText }}
-                        aria-hidden="true"
-                      />
-                    </div>
-
-                    <div className="my-3 space-y-2">
-                      <div
-                        className="h-2.5 w-4/5 rounded-full"
-                        style={{ background: 'var(--color-btn-gradient)' }}
-                      />
-                      <div className="h-2 w-full rounded-full bg-[#E2E8F0]" />
-                      <div className="h-2 w-2/3 rounded-full bg-[#E2E8F0]" />
-                      <div
-                        className="mt-2 grid grid-cols-2 gap-1.5 pt-1"
-                        aria-hidden="true"
-                      >
-                        <div
-                          className="h-7 rounded-lg"
-                          style={{ backgroundColor: 'var(--color-surface-soft)' }}
-                        />
-                        <div
-                          className="h-7 rounded-lg"
-                          style={{ backgroundColor: 'var(--color-surface-tint)' }}
-                        />
-                      </div>
-                    </div>
-
-                    <div>
-                      <p className="font-display text-xs font-bold text-[#0A1128]">
-                        {heroWorkspace.mobileTitle}
-                      </p>
-                      <p className="text-[11px] text-[#64748B]">{heroWorkspace.mobileTagline}</p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Interactive Stack Pills */}
-                <div className="mt-4 flex flex-wrap items-center gap-2 text-xs font-medium text-[#475569]">
-                  {['Custom Consulting', 'iOS & Android', 'Modern Web', 'Cross-Device QA'].map(
-                    (tag) => (
-                      <span
-                        key={tag}
-                        className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-1.5"
-                      >
-                        {tag}
-                      </span>
-                    ),
-                  )}
-                </div>
-              </div>
+              <ServiceArchitectureDiagram3D
+                variant="app-dev"
+                prefersReducedMotion={Boolean(prefersReducedMotion)}
+              />
             </motion.div>
           </div>
         </div>

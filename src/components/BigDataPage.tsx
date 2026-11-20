@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  Activity,
   ArrowDown,
   ArrowRight,
   BarChart3,
@@ -24,65 +23,12 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { PracticeArea, ScreenId } from '../data/apokrinData';
 import { useTheme } from '../theme/themeConfig';
+import { ServiceArchitectureDiagram3D } from './ServiceArchitectureDiagram3D';
 
 interface BigDataPageProps {
   onNavigate: (screen: ScreenId, practice?: PracticeArea, sectionId?: string) => void;
   onOpenBriefing: (practice?: PracticeArea, brief?: string) => void;
 }
-
-type HeroStageId = 'ingestion' | 'lakehouse' | 'intelligence';
-
-interface HeroStageConfig {
-  id: HeroStageId;
-  label: string;
-  title: string;
-  subtitle: string;
-  nodes: { label: string; role: string }[];
-  streamBars: number[];
-  tags: [string, string];
-}
-
-const HERO_STAGES: HeroStageConfig[] = [
-  {
-    id: 'ingestion',
-    label: 'Real-Time Ingestion',
-    title: 'Multi-Source Streaming & Raw Capture',
-    subtitle: 'Continuous ingestion across structured databases, event streams, and unstructured raw files',
-    nodes: [
-      { label: 'Event Streams', role: 'Real-time capture' },
-      { label: 'Unstructured Raw Data', role: 'Logs, docs & feeds' },
-      { label: 'Enterprise Systems', role: 'ERP, CRM & APIs' },
-    ],
-    streamBars: [56, 74, 68, 90, 82, 96],
-    tags: ['Structured & Unstructured', 'Continuous Stream Capture'],
-  },
-  {
-    id: 'lakehouse',
-    label: 'ETL & Lakehouse',
-    title: 'Unified Pipelines & Single Source of Truth',
-    subtitle: 'Automated transformation, governance validation, and scalable cloud or hybrid lakehouse storage',
-    nodes: [
-      { label: 'ETL Pipelines', role: 'Clean & transform' },
-      { label: 'Data Lake & Warehouse', role: 'Unified query layer' },
-      { label: 'Governance Layer', role: 'Quality & compliance' },
-    ],
-    streamBars: [64, 78, 86, 72, 92, 94],
-    tags: ['AWS · Azure · GCP · Hybrid', 'Single Source of Truth'],
-  },
-  {
-    id: 'intelligence',
-    label: 'AI & Analytics',
-    title: 'Predictive Models & Real-Time Dashboards',
-    subtitle: 'Operationalized ML pipelines, live KPI alerts, and prescriptive decision intelligence',
-    nodes: [
-      { label: 'ML Model Engine', role: 'Forecast & optimize' },
-      { label: 'Live Dashboards', role: 'KPI alerts & trends' },
-      { label: 'DSaaS Delivery', role: 'Rapid experimentation' },
-    ],
-    streamBars: [60, 82, 76, 88, 94, 98],
-    tags: ['Predictive & Prescriptive', 'Encrypted Governance'],
-  },
-];
 
 const INTRO_LAYERS = [
   {
@@ -302,7 +248,6 @@ export function BigDataPage({ onNavigate, onOpenBriefing }: BigDataPageProps) {
   const { themeConfig } = useTheme();
   const prefersReducedMotion = useReducedMotion();
 
-  const [activeHeroStage, setActiveHeroStage] = useState<HeroStageId>('ingestion');
   const [activeIntroLayer, setActiveIntroLayer] = useState<number>(0);
   const [activeWhyIdx, setActiveWhyIdx] = useState<number>(0);
   const [capabilityFilter, setCapabilityFilter] = useState<CapabilityGroupFilter>('all');
@@ -310,7 +255,6 @@ export function BigDataPage({ onNavigate, onOpenBriefing }: BigDataPageProps) {
     ANALYTICS_AI_CAPABILITIES[0].id,
   );
 
-  const heroStage = HERO_STAGES.find((s) => s.id === activeHeroStage) ?? HERO_STAGES[0];
   const activeWhy = WHY_CHOOSE_ITEMS[activeWhyIdx] ?? WHY_CHOOSE_ITEMS[0];
   const activeAnalyticsCap =
     ANALYTICS_AI_CAPABILITIES.find((c) => c.id === activeAnalyticsId) ??
@@ -382,168 +326,17 @@ export function BigDataPage({ onNavigate, onOpenBriefing }: BigDataPageProps) {
               </div>
             </motion.div>
 
-            {/* Right Column: Interactive Claymorphism Big Data Lakehouse Architecture Studio */}
+            {/* Right Column: Interactive 3D Big Data Lakehouse Diagram */}
             <motion.div
               initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
               className="relative lg:col-span-6"
             >
-              {/* Floating Top-Left Mini Clay Badge */}
-              <div
-                aria-hidden="true"
-                className="apokrin-clay-bob-0 pointer-events-none absolute -left-3 -top-4 z-20 hidden rounded-2xl border border-white/95 bg-white/92 px-3.5 py-2.5 shadow-[0_14px_30px_-10px_rgba(15,23,42,0.16)] backdrop-blur-md sm:flex sm:items-center sm:gap-2.5"
-              >
-                <div
-                  className="flex h-8 w-8 items-center justify-center rounded-xl text-white"
-                  style={{ background: 'var(--color-btn-gradient)' }}
-                >
-                  <Database className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="font-display text-xs font-bold text-[#0A1128]">
-                    {heroStage.tags[0]}
-                  </p>
-                  <p className="text-[11px] text-[#64748B]">{heroStage.tags[1]}</p>
-                </div>
-              </div>
-
-              {/* Floating Bottom-Right Mini Clay Badge */}
-              <div
-                aria-hidden="true"
-                className="apokrin-clay-bob-1 pointer-events-none absolute -bottom-4 -right-2 z-20 hidden rounded-2xl border border-white/95 bg-white/92 px-3.5 py-2.5 shadow-[0_14px_30px_-10px_rgba(15,23,42,0.16)] backdrop-blur-md sm:flex sm:items-center sm:gap-2.5"
-              >
-                <div
-                  className="flex h-8 w-8 items-center justify-center rounded-xl"
-                  style={{
-                    backgroundColor: 'var(--color-surface-soft)',
-                    color: 'var(--color-primary-strong)',
-                  }}
-                >
-                  <ShieldCheck className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="font-display text-xs font-bold text-[#0A1128]">
-                    Enterprise Security
-                  </p>
-                  <p className="text-[11px] text-[#64748B]">Governed &amp; Encrypted at Scale</p>
-                </div>
-              </div>
-
-              {/* Main Interactive Claymorphism Workspace */}
-              <div className="apokrin-clay-panel relative rounded-[2rem] border border-white/95 p-5 sm:p-6">
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E2E8F0] pb-3.5">
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wider text-[#64748B]">
-                      Big Data Architecture Blueprint
-                    </p>
-                    <h2 className="mt-0.5 font-display text-sm font-bold text-[#0A1128] sm:text-base">
-                      {heroStage.title}
-                    </h2>
-                  </div>
-
-                  <div
-                    role="tablist"
-                    aria-label="Big Data architecture stage"
-                    className="inline-flex items-center gap-1 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-1"
-                  >
-                    {HERO_STAGES.map((stage) => {
-                      const isActive = stage.id === activeHeroStage;
-                      return (
-                        <button
-                          key={stage.id}
-                          type="button"
-                          role="tab"
-                          aria-selected={isActive}
-                          onClick={() => setActiveHeroStage(stage.id)}
-                          className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary-strong)] ${
-                            isActive
-                              ? 'bg-white text-[#0A1128] shadow-sm'
-                              : 'text-[#64748B] hover:text-[#0A1128]'
-                          }`}
-                          style={isActive ? { color: themeConfig.primaryStrong } : undefined}
-                        >
-                          {stage.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={heroStage.id}
-                    initial={prefersReducedMotion ? false : { opacity: 0, y: 6 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={prefersReducedMotion ? undefined : { opacity: 0, y: -4 }}
-                    transition={{ duration: 0.2 }}
-                    className="mt-4 space-y-4"
-                  >
-                    <p className="text-xs leading-relaxed text-[#475569]">{heroStage.subtitle}</p>
-
-                    {/* 3-Node Architecture Flow */}
-                    <div className="grid grid-cols-1 gap-2.5 sm:grid-cols-3">
-                      {heroStage.nodes.map((node, idx) => (
-                        <div
-                          key={node.label}
-                          className="rounded-2xl border border-[#E2E8F0] bg-white p-3.5 shadow-sm"
-                        >
-                          <div className="flex items-center justify-between">
-                            <span
-                              className="font-mono text-[11px] font-bold"
-                              style={{ color: themeConfig.primaryStrong }}
-                            >
-                              0{idx + 1}
-                            </span>
-                            <Activity
-                              className="h-3.5 w-3.5"
-                              style={{ color: themeConfig.secondaryText }}
-                              aria-hidden="true"
-                            />
-                          </div>
-                          <p className="mt-2 font-display text-xs font-bold text-[#0A1128]">
-                            {node.label}
-                          </p>
-                          <p className="mt-0.5 text-[11px] text-[#64748B]">{node.role}</p>
-                        </div>
-                      ))}
-                    </div>
-
-                    {/* Dark Processing Throughput Visual */}
-                    <div className="rounded-2xl bg-[#0A1128] p-4 text-white">
-                      <div className="flex items-center justify-between text-xs">
-                        <span className="font-semibold text-slate-200">
-                          Pipeline Processing Flow
-                        </span>
-                        <span className="font-mono text-[11px] text-slate-400">
-                          Real-Time · Governed
-                        </span>
-                      </div>
-
-                      <div className="mt-3 flex h-16 items-end gap-2">
-                        {heroStage.streamBars.map((val, i) => (
-                          <motion.div
-                            key={`${heroStage.id}-${i}`}
-                            initial={false}
-                            animate={{ height: `${val}%` }}
-                            transition={{
-                              duration: prefersReducedMotion ? 0 : 0.4,
-                              delay: i * 0.03,
-                              ease: [0.16, 1, 0.3, 1],
-                            }}
-                            className="flex-1 rounded-t-md"
-                            style={{
-                              background:
-                                i % 2 === 0 ? 'var(--color-btn-gradient)' : themeConfig.accent,
-                              opacity: i % 2 === 0 ? 1 : 0.72,
-                            }}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
-              </div>
+              <ServiceArchitectureDiagram3D
+                variant="big-data"
+                prefersReducedMotion={Boolean(prefersReducedMotion)}
+              />
             </motion.div>
           </div>
         </div>

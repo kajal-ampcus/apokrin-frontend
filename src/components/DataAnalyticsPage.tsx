@@ -9,7 +9,6 @@ import {
   Layers,
   LineChart,
   Lock,
-  PieChart,
   Share2,
   ShieldCheck,
   Smartphone,
@@ -23,57 +22,12 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { PracticeArea, ScreenId } from '../data/apokrinData';
 import { useTheme } from '../theme/themeConfig';
+import { DataAnalyticsDiagram3D } from './DataAnalyticsDiagram3D';
 
 interface DataAnalyticsPageProps {
   onNavigate: (screen: ScreenId, practice?: PracticeArea, sectionId?: string) => void;
   onOpenBriefing: (practice?: PracticeArea, brief?: string) => void;
 }
-
-type HeroLensId = 'marketing' | 'crm' | 'risk';
-
-interface HeroLensConfig {
-  id: HeroLensId;
-  label: string;
-  heading: string;
-  caption: string;
-  bars: number[];
-  curvePath: string;
-  areaPath: string;
-  stages: string[];
-}
-
-const HERO_LENSES: HeroLensConfig[] = [
-  {
-    id: 'marketing',
-    label: 'Marketing ROI',
-    heading: 'Campaign Attribution & Traffic Flow',
-    caption: 'Structured reporting across channels, engagement, and conversion sequences',
-    bars: [44, 62, 54, 78, 70, 92],
-    curvePath: 'M 8 86 C 48 76, 84 68, 126 50 C 168 32, 206 42, 252 20',
-    areaPath: 'M 8 86 C 48 76, 84 68, 126 50 C 168 32, 206 42, 252 20 L 252 104 L 8 104 Z',
-    stages: ['Paid Search', 'Organic Web', 'Social', 'Direct'],
-  },
-  {
-    id: 'crm',
-    label: 'CRM Cohorts',
-    heading: 'Customer Revenue & Regional Segments',
-    caption: 'Predictive CRM segmentation by revenue potential and interaction history',
-    bars: [52, 68, 74, 64, 86, 94],
-    curvePath: 'M 8 90 C 52 82, 90 54, 134 46 C 178 38, 214 26, 252 16',
-    areaPath: 'M 8 90 C 52 82, 90 54, 134 46 C 178 38, 214 26, 252 16 L 252 104 L 8 104 Z',
-    stages: ['Enterprise', 'Mid-Market', 'Regional', 'Retention'],
-  },
-  {
-    id: 'risk',
-    label: 'Risk & Audit',
-    heading: 'Governance & Infrastructure Posture',
-    caption: 'Aggregated risk data assessment with strict audit compliance controls',
-    bars: [60, 72, 66, 84, 88, 96],
-    curvePath: 'M 8 82 C 50 74, 92 60, 132 42 C 172 28, 212 24, 252 14',
-    areaPath: 'M 8 82 C 50 74, 92 60, 132 42 C 172 28, 212 24, 252 14 L 252 104 L 8 104 Z',
-    stages: ['Risk Data', 'IT Infra', 'Audit', 'Compliance'],
-  },
-];
 
 const OVERVIEW_PIPELINE_STEPS = [
   {
@@ -182,14 +136,12 @@ export function DataAnalyticsPage({ onOpenBriefing }: DataAnalyticsPageProps) {
   const { themeConfig } = useTheme();
   const prefersReducedMotion = useReducedMotion();
 
-  const [activeLensId, setActiveLensId] = useState<HeroLensId>('marketing');
   const [activePipelineIdx, setActivePipelineIdx] = useState<number>(0);
   const [solutionFilter, setSolutionFilter] = useState<SolutionFilterId>('all');
   const [marketViewMode, setMarketViewMode] = useState<'roi' | 'traffic'>('roi');
   const [vizMode, setVizMode] = useState<VizMode>('trend');
   const [activeWhyIdx, setActiveWhyIdx] = useState<number>(0);
 
-  const activeLens = HERO_LENSES.find((item) => item.id === activeLensId) ?? HERO_LENSES[0];
   const activeWhy = WHY_APOKRIN_ITEMS[activeWhyIdx] ?? WHY_APOKRIN_ITEMS[0];
 
   const scrollToSolutions = () => {
@@ -264,217 +216,14 @@ export function DataAnalyticsPage({ onOpenBriefing }: DataAnalyticsPageProps) {
               </div>
             </motion.div>
 
-            {/* Right Column: Interactive Claymorphism & Glass Analytics Composition */}
+            {/* Right Column: Interactive 3D Data Analytics Architecture Diagram */}
             <motion.div
               initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
               className="relative lg:col-span-6"
             >
-              {/* Floating Top-Left Mini Attribution Card */}
-              <div
-                aria-hidden="true"
-                className="apokrin-clay-bob-0 pointer-events-none absolute -left-3 -top-5 z-20 hidden rounded-2xl border border-white/90 bg-white/88 px-3.5 py-2.5 shadow-[0_14px_30px_-10px_rgba(15,23,42,0.16)] backdrop-blur-md sm:flex sm:items-center sm:gap-2.5"
-              >
-                <div
-                  className="flex h-8 w-8 items-center justify-center rounded-xl text-white"
-                  style={{ background: 'var(--color-btn-gradient)' }}
-                >
-                  <PieChart className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="font-display text-xs font-bold text-[#0A1128]">
-                    Unified Attribution
-                  </p>
-                  <p className="text-[11px] text-[#64748B]">Web · Mobile · Social</p>
-                </div>
-              </div>
-
-              {/* Floating Bottom-Right Mini Governance Card */}
-              <div
-                aria-hidden="true"
-                className="apokrin-clay-bob-1 pointer-events-none absolute -bottom-5 -right-2 z-20 hidden rounded-2xl border border-white/90 bg-white/90 px-3.5 py-2.5 shadow-[0_14px_30px_-10px_rgba(15,23,42,0.16)] backdrop-blur-md sm:flex sm:items-center sm:gap-2.5"
-              >
-                <div
-                  className="flex h-8 w-8 items-center justify-center rounded-xl"
-                  style={{
-                    backgroundColor: 'var(--color-surface-soft)',
-                    color: 'var(--color-primary-strong)',
-                  }}
-                >
-                  <ShieldCheck className="h-4 w-4" />
-                </div>
-                <div>
-                  <p className="font-display text-xs font-bold text-[#0A1128]">
-                    Audit &amp; Lineage Ready
-                  </p>
-                  <p className="text-[11px] text-[#64748B]">Risk &amp; Compliance Controls</p>
-                </div>
-              </div>
-
-              {/* Main Interactive Dashboard Preview Canvas */}
-              <div className="apokrin-clay-panel relative rounded-[2rem] border border-white/95 p-5 sm:p-7">
-                {/* Top Toolbar: Lens Switcher */}
-                <div className="flex flex-wrap items-center justify-between gap-3 border-b border-[#E2E8F0] pb-4">
-                  <div>
-                    <p className="text-[11px] font-semibold uppercase tracking-wider text-[#64748B]">
-                      Interactive Analytics Workspace
-                    </p>
-                    <h2 className="mt-0.5 font-display text-base font-bold text-[#0A1128]">
-                      {activeLens.heading}
-                    </h2>
-                  </div>
-
-                  <div
-                    role="tablist"
-                    aria-label="Preview analytics domain"
-                    className="inline-flex items-center gap-1 rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] p-1"
-                  >
-                    {HERO_LENSES.map((lens) => {
-                      const isActive = lens.id === activeLensId;
-                      return (
-                        <button
-                          key={lens.id}
-                          type="button"
-                          role="tab"
-                          aria-selected={isActive}
-                          onClick={() => setActiveLensId(lens.id)}
-                          className={`rounded-lg px-2.5 py-1.5 text-xs font-semibold whitespace-nowrap shrink-0 transition-all duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary-strong)] ${
-                            isActive
-                              ? 'bg-white text-[#0A1128] shadow-sm'
-                              : 'text-[#64748B] hover:text-[#0A1128]'
-                          }`}
-                          style={isActive ? { color: themeConfig.primaryStrong } : undefined}
-                        >
-                          {lens.label}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                {/* Live Interactive Visualization Body */}
-                <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-12">
-                  {/* Trend Curve Panel */}
-                  <div className="rounded-2xl border border-[#E2E8F0] bg-white p-4 sm:col-span-7">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-[#475569]">
-                        Real-Time Signal Curve
-                      </span>
-                      <TrendingUp
-                        className="h-4 w-4"
-                        style={{ color: themeConfig.primaryStrong }}
-                        aria-hidden="true"
-                      />
-                    </div>
-
-                    <svg
-                      viewBox="0 0 260 112"
-                      className="mt-3 h-28 w-full overflow-visible"
-                      aria-hidden="true"
-                    >
-                      <defs>
-                        <linearGradient
-                          id={`hero-area-${themeConfig.id}`}
-                          x1="0%"
-                          y1="0%"
-                          x2="0%"
-                          y2="100%"
-                        >
-                          <stop offset="0%" stopColor={themeConfig.primary} stopOpacity="0.26" />
-                          <stop offset="100%" stopColor={themeConfig.secondary} stopOpacity="0.02" />
-                        </linearGradient>
-                        <linearGradient
-                          id={`hero-stroke-${themeConfig.id}`}
-                          x1="0%"
-                          y1="0%"
-                          x2="100%"
-                          y2="0%"
-                        >
-                          <stop offset="0%" stopColor={themeConfig.primaryStrong} />
-                          <stop offset="100%" stopColor={themeConfig.secondary} />
-                        </linearGradient>
-                      </defs>
-
-                      {/* Subtle gridlines */}
-                      <line x1="0" y1="28" x2="260" y2="28" stroke="#F1F5F9" strokeWidth="1" />
-                      <line x1="0" y1="60" x2="260" y2="60" stroke="#F1F5F9" strokeWidth="1" />
-                      <line x1="0" y1="92" x2="260" y2="92" stroke="#F1F5F9" strokeWidth="1" />
-
-                      <motion.path
-                        d={activeLens.areaPath}
-                        fill={`url(#hero-area-${themeConfig.id})`}
-                        initial={false}
-                        animate={{ d: activeLens.areaPath }}
-                        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                      />
-                      <motion.path
-                        d={activeLens.curvePath}
-                        fill="none"
-                        stroke={`url(#hero-stroke-${themeConfig.id})`}
-                        strokeWidth="3"
-                        strokeLinecap="round"
-                        initial={false}
-                        animate={{ d: activeLens.curvePath }}
-                        transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                      />
-                    </svg>
-                  </div>
-
-                  {/* Distribution Bars Panel */}
-                  <div className="flex flex-col justify-between rounded-2xl border border-[#E2E8F0] bg-white p-4 sm:col-span-5">
-                    <div className="flex items-center justify-between">
-                      <span className="text-xs font-semibold text-[#475569]">
-                        Segment Breakdown
-                      </span>
-                      <BarChart3
-                        className="h-4 w-4"
-                        style={{ color: themeConfig.secondaryText }}
-                        aria-hidden="true"
-                      />
-                    </div>
-
-                    <div className="mt-4 flex h-24 items-end gap-2">
-                      {activeLens.bars.map((height, i) => (
-                        <div key={i} className="flex flex-1 flex-col items-center justify-end h-full">
-                          <motion.div
-                            className="w-full rounded-t-lg"
-                            initial={false}
-                            animate={{ height: `${height}%` }}
-                            transition={{
-                              duration: 0.45,
-                              delay: prefersReducedMotion ? 0 : i * 0.03,
-                              ease: [0.16, 1, 0.3, 1],
-                            }}
-                            style={{
-                              background:
-                                i >= 4
-                                  ? 'var(--color-btn-gradient)'
-                                  : 'var(--color-surface-tint)',
-                            }}
-                          />
-                        </div>
-                      ))}
-                    </div>
-
-                    <p className="mt-3 text-[11px] leading-snug text-[#64748B]">
-                      {activeLens.caption}
-                    </p>
-                  </div>
-                </div>
-
-                {/* Bottom Domain Stage Strip */}
-                <div className="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-4">
-                  {activeLens.stages.map((stage) => (
-                    <div
-                      key={stage}
-                      className="rounded-xl border border-[#E2E8F0] bg-[#F8FAFC] px-3 py-2 text-center text-xs font-semibold text-[#334155]"
-                    >
-                      {stage}
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <DataAnalyticsDiagram3D prefersReducedMotion={Boolean(prefersReducedMotion)} />
             </motion.div>
           </div>
         </div>
