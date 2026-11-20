@@ -71,25 +71,25 @@ const CORE_VALUES = [
   {
     id: 'academic-excellence',
     title: 'Academic Excellence',
-    description: 'Praesent sapien massa, convallis a pellentesque nec, egestas non nisi.',
+    description: 'We are committed to delivering quality, building lasting relationships, and creating meaningful experiences for everyone we serve.',
     icon: GraduationCap,
   },
   {
     id: 'community-engagement',
     title: 'Community Engagement',
-    description: 'Vivamus magna justo, lacinia eget consectetur sed, convallis at tellus.',
+    description: 'Our focus is on providing innovative solutions, maintaining the highest standards, and ensuring complete customer satisfaction.',
     icon: HeartHandshake,
   },
   {
     id: 'innovation',
     title: 'Innovation',
-    description: 'Curabitur arcu erat, accumsan id imperdiet et, porttitor at sem.',
+    description: 'With a strong commitment to excellence, we approach every project with dedication, attention to detail, and a focus on achieving the best results.',
     icon: Lightbulb,
   },
   {
     id: 'global-perspective',
     title: 'Global Perspective',
-    description: 'Donec sollicitudin molestie malesuada. Curabitur non nulla sit amet nisl tempus.',
+    description: 'Your satisfaction is our priority. We value your trust, welcome your feedback, and are always ready to assist you with your needs.',
     icon: Globe,
   },
 ];
