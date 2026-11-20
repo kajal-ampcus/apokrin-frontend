@@ -358,19 +358,11 @@ export function ContactUsPage({ onNavigate }: ContactUsPageProps) {
               <div className="mt-6 flex flex-wrap items-center gap-3">
                 <button
                   type="button"
-                  onClick={scrollToForm}
+                  onClick={() => onNavigate('overview', undefined, 'services-stepper')}
                   className="apokrin-btn-primary inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary-strong)] focus-visible:ring-offset-2"
                 >
-                  <span>Get in Touch</span>
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => onNavigate('overview', undefined, 'services-stepper')}
-                  className="apokrin-btn-secondary inline-flex items-center gap-2 rounded-full px-6 py-2.5 text-sm font-semibold whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary-strong)] focus-visible:ring-offset-2"
-                >
                   <span>Explore Our Services</span>
+                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
                 </button>
               </div>
             </motion.div>
