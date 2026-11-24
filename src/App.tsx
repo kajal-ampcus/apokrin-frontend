@@ -3,208 +3,156 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { useState } from 'react';
-import { TopBar } from './components/TopBar';
-import { Footer } from './components/Footer';
-import { OverviewScreen } from './components/OverviewScreen';
-import { SolutionsScreen } from './components/SolutionsScreen';
-import { TalentScreen } from './components/TalentScreen';
-import { BenchmarksScreen } from './components/BenchmarksScreen';
-import { EngagementsScreen } from './components/EngagementsScreen';
-import { StaffingSolutionsPage } from './components/StaffingSolutionsPage';
-import { DataAnalyticsPage } from './components/DataAnalyticsPage';
-import { ApplicationDevelopmentPage } from './components/ApplicationDevelopmentPage';
-import { BigDataPage } from './components/BigDataPage';
-import { DatabaseManagementPage } from './components/DatabaseManagementPage';
-import { InfrastructureManagementPage } from './components/InfrastructureManagementPage';
-import { EnterpriseMobilityPage } from './components/EnterpriseMobilityPage';
-import { AnalyticsServicePage } from './components/AnalyticsServicePage';
-import { HrmsSolutionsPage } from './components/HrmsSolutionsPage';
-import { AboutUsPage } from './components/AboutUsPage';
-import { ContactUsPage } from './components/ContactUsPage';
-import { BackToTopButton } from './components/BackToTopButton';
-import { GlobalAmbient3DBackground } from './components/GlobalAmbient3DBackground';
-import { ThemeProvider } from './theme/themeConfig';
-import {
-  BriefingRequest,
-  INITIAL_BRIEFINGS,
-  PracticeArea,
-  ScreenId,
-} from './data/apokrinData';
+import React, { useEffect } from 'react';
+import { useAppStore } from './store/appStore';
+import { LoginPage } from './features/auth/LoginPage';
+import { Sidebar } from './components/navigation/Sidebar';
+import { TopBar } from './components/navigation/TopBar';
+import { GlobalSearchModal } from './components/common/GlobalSearchModal';
+
+// Feature Views
+import { DashboardRouter } from './features/dashboard/DashboardRouter';
+import { JobList } from './features/jobs/JobList';
+import { JobCreate } from './features/jobs/JobCreate';
+import { JobDetail } from './features/jobs/JobDetail';
+import { AIMatchingJobs } from './features/jobs/AIMatchingJobs';
+import { ApplicantProfileSubmission } from './features/jobs/ApplicantProfileSubmission';
+import { ClientSubmission } from './features/submissions/ClientSubmission';
+import { ApplicantList } from './features/applicants/ApplicantList';
+import { ApplicantCreate } from './features/applicants/ApplicantCreate';
+import { ApplicantDetail } from './features/applicants/ApplicantDetail';
+import { ApplicantMatchingJobs } from './features/applicants/ApplicantMatchingJobs';
+import { ApplicantEmailShare } from './features/applicants/ApplicantEmailShare';
+import { PipelineKanban } from './features/pipeline/PipelineKanban';
+import { ClientList } from './features/clients/ClientList';
+import { VendorList } from './features/vendors/VendorList';
+import { InterviewManagement } from './features/interviews/InterviewManagement';
+import { SubmissionList } from './features/submissions/SubmissionList';
+import { PlacementList } from './features/placements/PlacementList';
+import { AdvancedSearch } from './features/search/AdvancedSearch';
+import { TaskManager } from './features/tasks/TaskManager';
+import { ReportsAnalytics } from './features/reports/ReportsAnalytics';
+import { UserManagement } from './features/admin/UserManagement';
+import { PlatformSettings } from './features/settings/PlatformSettings';
+import { RequisitionAdministration } from './features/admin/RequisitionAdministration';
 
 export default function App() {
-  const [activeScreen, setActiveScreen] = useState<ScreenId>('overview');
-  const [solutionsPractice, setSolutionsPractice] = useState<PracticeArea | 'All'>('All');
-  const [shortlistIds, setShortlistIds] = useState<string[]>(['tal-1', 'tal-2']);
-  const [briefings, setBriefings] = useState<BriefingRequest[]>(INITIAL_BRIEFINGS);
+  const { currentRoute, selectedId, isAuthenticated, isDark, currentUser } = useAppStore();
+  const isRecruiter = currentUser?.role === 'recruiter';
+  const isRecruiterFullBleed = isRecruiter && (currentRoute === 'applicant-detail' || currentRoute === 'job-detail');
+  const isAdminModuleView =
+    currentUser?.role === 'admin' &&
+    (currentRoute === 'applicants' ||
+    currentRoute === 'settings' ||
+    currentRoute === 'dashboard' ||
+    currentRoute === 'clients' ||
+    currentRoute === 'job-new' ||
+    currentRoute === 'requisition-code' ||
+    currentRoute === 'requisition-lookups' ||
+    currentRoute === 'requisition-settings' ||
+    currentRoute === 'requisition-workflows');
+  const isFullBleed = isRecruiterFullBleed || currentRoute === 'applicant-detail' || currentRoute === 'matching-jobs';
+  const isFullWidth = isRecruiter || isFullBleed || isAdminModuleView;
+  const useBlueClayTheme = isAuthenticated;
 
-  const handleNavigate = (screen: ScreenId, practice?: PracticeArea, sectionId?: string) => {
-    if (screen === 'solutions') {
-      setSolutionsPractice(practice ?? 'All');
-    }
-    setActiveScreen(screen);
-
-    if (sectionId) {
-      window.setTimeout(() => {
-        const target = document.getElementById(sectionId);
-        if (target) {
-          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-      }, 60);
+  useEffect(() => {
+    if (isDark) {
+      document.documentElement.classList.add('dark');
     } else {
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      document.documentElement.classList.remove('dark');
     }
-  };
+  }, [isDark]);
 
-  const handleOpenBriefing = (_practice?: PracticeArea, _brief?: string) => {
-    if (activeScreen === 'contact') {
-      handleNavigate('contact', undefined, 'contact-form-section');
-    } else {
-      handleNavigate('contact');
+  // Open the sign-in screen for both the login route and legacy landing links.
+  if (currentRoute === 'login' || currentRoute === 'landing') {
+    return <LoginPage />;
+  }
+
+  // Protected Routes - If unauthenticated, redirect to Login
+  if (!isAuthenticated) {
+    return <LoginPage />;
+  }
+
+  // Main Enterprise Application Shell
+  const renderCurrentView = () => {
+    switch (currentRoute) {
+      case 'dashboard':
+        return <DashboardRouter />;
+      case 'jobs':
+        return <JobList />;
+      case 'job-new':
+        return <JobCreate key="new-job" />;
+      case 'job-edit':
+        return <JobCreate key={`edit-job-${selectedId}`} initialMode="manual" />;
+      case 'job-templates':
+        return <JobCreate key="job-templates" initialMode="template" />;
+      case 'job-detail':
+        return <JobDetail />;
+      case 'matching-jobs':
+        return <AIMatchingJobs />;
+      case 'applicant-profile-submission':
+        return <ApplicantProfileSubmission />;
+      case 'client-submission':
+        return <ClientSubmission />;
+      case 'applicants':
+        return <ApplicantList />;
+      case 'applicant-new':
+        return <ApplicantCreate />;
+      case 'applicant-detail':
+        return <ApplicantDetail />;
+      case 'applicant-matching-jobs':
+        return <ApplicantMatchingJobs />;
+      case 'applicant-email-share':
+        return <ApplicantEmailShare />;
+      case 'pipeline':
+        return <PipelineKanban />;
+      case 'clients':
+        return <ClientList />;
+      case 'vendors':
+        return <VendorList />;
+      case 'interviews':
+        return <InterviewManagement />;
+      case 'submissions':
+        return <SubmissionList />;
+      case 'placements':
+        return <PlacementList />;
+      case 'search':
+        return <AdvancedSearch />;
+      case 'tasks':
+        return <TaskManager />;
+      case 'reports':
+        return <ReportsAnalytics />;
+      case 'admin-users':
+        return <UserManagement />;
+      case 'requisition-code':
+      case 'requisition-lookups':
+      case 'requisition-settings':
+      case 'requisition-workflows':
+        return <RequisitionAdministration />;
+      case 'settings':
+        return <PlatformSettings />;
+      default:
+        return <DashboardRouter />;
     }
-  };
-
-  const handleToggleShortlist = (id: string) => {
-    setShortlistIds((prev) =>
-      prev.includes(id) ? prev.filter((item) => item !== id) : [...prev, id],
-    );
-  };
-
-  const handleCancelBriefing = (id: string) => {
-    setBriefings((prev) => prev.filter((item) => item.id !== id));
   };
 
   return (
-    <ThemeProvider>
-      <div className="apokrin-theme-root apokrin-ambient-host relative isolate min-h-screen flex flex-col bg-[var(--color-background)] text-[var(--color-text)]">
-        <GlobalAmbient3DBackground />
+    <div className={`app-shell flex h-screen w-screen overflow-hidden bg-[#FFFFFF] dark:bg-[#1E40AF] text-[#1E293B] dark:text-[#FFFFFF] ${isRecruiter ? 'recruiter-shell' : ''} ${useBlueClayTheme ? 'blue-clay-theme' : ''}`}>
+      {!isRecruiter && <Sidebar />}
 
-        <TopBar
-          activeScreen={activeScreen}
-          onNavigate={handleNavigate}
-          onOpenBriefing={handleOpenBriefing}
-        />
+      {/* Main Workspace Frame */}
+      <div className="app-workspace flex-1 flex flex-col min-w-0 min-h-0 overflow-hidden">
+        {/* Top Navigation */}
+        <TopBar />
 
-        <main className="relative z-10 flex-1">
-          {activeScreen === 'overview' && (
-            <OverviewScreen
-              onNavigate={handleNavigate}
-              onOpenBriefing={handleOpenBriefing}
-            />
-          )}
-
-          {activeScreen === 'about' && (
-            <AboutUsPage
-              onNavigate={handleNavigate}
-              onOpenBriefing={handleOpenBriefing}
-            />
-          )}
-
-          {activeScreen === 'contact' && (
-            <ContactUsPage
-              onNavigate={handleNavigate}
-              onOpenBriefing={handleOpenBriefing}
-            />
-          )}
-
-          {activeScreen === 'solutions' && (
-            <SolutionsScreen
-              key={solutionsPractice}
-              initialPractice={solutionsPractice}
-              onOpenBriefing={handleOpenBriefing}
-            />
-          )}
-
-          {activeScreen === 'talent' && (
-            <TalentScreen
-              shortlistIds={shortlistIds}
-              onToggleShortlist={handleToggleShortlist}
-              onClearShortlist={() => setShortlistIds([])}
-              onOpenBriefing={handleOpenBriefing}
-            />
-          )}
-
-          {activeScreen === 'benchmarks' && <BenchmarksScreen />}
-
-          {activeScreen === 'engagements' && (
-            <EngagementsScreen
-              briefings={briefings}
-              onCancelBriefing={handleCancelBriefing}
-              onContactClick={() => handleNavigate('contact')}
-            />
-          )}
-
-          {activeScreen === 'staffing' && (
-            <StaffingSolutionsPage
-              onNavigate={handleNavigate}
-              onOpenBriefing={handleOpenBriefing}
-            />
-          )}
-
-          {activeScreen === 'data-analytics' && (
-            <DataAnalyticsPage
-              onNavigate={handleNavigate}
-              onOpenBriefing={handleOpenBriefing}
-            />
-          )}
-
-          {activeScreen === 'application-development' && (
-            <ApplicationDevelopmentPage
-              onNavigate={handleNavigate}
-              onOpenBriefing={handleOpenBriefing}
-            />
-          )}
-
-          {activeScreen === 'big-data' && (
-            <BigDataPage
-              onNavigate={handleNavigate}
-              onOpenBriefing={handleOpenBriefing}
-            />
-          )}
-
-          {activeScreen === 'database-management' && (
-            <DatabaseManagementPage
-              onNavigate={handleNavigate}
-              onOpenBriefing={handleOpenBriefing}
-            />
-          )}
-
-          {activeScreen === 'infrastructure-management' && (
-            <InfrastructureManagementPage
-              onNavigate={handleNavigate}
-              onOpenBriefing={handleOpenBriefing}
-            />
-          )}
-
-          {activeScreen === 'mobility' && (
-            <EnterpriseMobilityPage
-              onNavigate={handleNavigate}
-              onOpenBriefing={handleOpenBriefing}
-            />
-          )}
-
-          {activeScreen === 'analytics' && (
-            <AnalyticsServicePage
-              onNavigate={handleNavigate}
-              onOpenBriefing={handleOpenBriefing}
-            />
-          )}
-
-          {activeScreen === 'hrms' && (
-            <HrmsSolutionsPage
-              onNavigate={handleNavigate}
-              onOpenBriefing={handleOpenBriefing}
-            />
-          )}
+        {/* Viewport Content */}
+        <main className={`app-content flex-1 min-h-0 overflow-y-auto ${isFullBleed ? 'p-0' : isAdminModuleView ? 'px-3 pb-3 pt-0 md:px-4 md:pb-4 md:pt-0' : isRecruiter ? 'p-4 sm:p-5 md:p-6' : 'p-6 md:p-8'}`}>
+          <div className={isFullWidth ? 'w-full' : 'max-w-7xl mx-auto'}>{renderCurrentView()}</div>
         </main>
-
-        <Footer
-          onNavigate={handleNavigate}
-          onOpenBriefing={handleOpenBriefing}
-        />
-
-        <BackToTopButton />
       </div>
-    </ThemeProvider>
+
+      {/* Global Quick Search Modal (Cmd+K) */}
+      <GlobalSearchModal />
+    </div>
   );
 }
