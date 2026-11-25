@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { ArrowRight, Mail, MapPin, Phone, X } from 'lucide-react';
 import { PracticeArea, ScreenId } from '../data/apokrinData';
+import { SERVICES_CONFIG } from '../data/servicesConfig';
 
 interface FooterProps {
   onNavigate: (screen: ScreenId, practice?: PracticeArea, sectionId?: string) => void;
@@ -11,17 +12,10 @@ const FOOTER_SERVICES: {
   label: string;
   screen: ScreenId;
   practice?: PracticeArea;
-}[] = [
-  { label: 'Staffing', screen: 'staffing' },
-  { label: 'Data Analytics', screen: 'data-analytics' },
-  { label: 'Application Development', screen: 'application-development' },
-  { label: 'Big Data', screen: 'big-data' },
-  { label: 'Database Management System', screen: 'database-management' },
-  { label: 'Infrastructure Management Systems', screen: 'infrastructure-management' },
-  { label: 'Mobility', screen: 'mobility' },
-  { label: 'Analytics', screen: 'analytics' },
-  { label: 'HRMS', screen: 'hrms' },
-];
+}[] = SERVICES_CONFIG.map((service) => ({
+  label: service.name,
+  screen: service.id,
+}));
 
 function ApokrinOriginalFooterLogo() {
   const [imgFailed, setImgFailed] = useState(false);

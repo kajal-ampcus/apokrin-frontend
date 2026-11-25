@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  ArrowDown,
   ArrowRight,
   Blocks,
   CheckCircle2,
@@ -25,7 +24,7 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { PracticeArea, ScreenId } from '../data/apokrinData';
 import { useTheme } from '../theme/themeConfig';
-import { ServiceArchitectureDiagram3D } from './ServiceArchitectureDiagram3D';
+import { ServicePageTemplate } from './services/ServicePageTemplate';
 
 interface ApplicationDevelopmentPageProps {
   onNavigate: (screen: ScreenId, practice?: PracticeArea, sectionId?: string) => void;
@@ -220,6 +219,7 @@ function SectionBadgeWithDot({ label }: { label: string }) {
 }
 
 export function ApplicationDevelopmentPage({
+  onNavigate,
   onOpenBriefing,
 }: ApplicationDevelopmentPageProps) {
   const { themeConfig } = useTheme();
@@ -247,78 +247,12 @@ export function ApplicationDevelopmentPage({
   };
 
   return (
-    <div className="relative overflow-x-hidden bg-white">
-      {/* =====================================================================
-          SECTION 1: HERO SECTION (Light Theme + Interactive Software Composition)
-         ===================================================================== */}
-      <section
-        aria-labelledby="app-dev-hero-heading"
-        className="apokrin-hero-light relative overflow-hidden border-b border-[#E2E8F0] py-12 sm:py-16 lg:py-20"
-      >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-24 top-0 h-96 w-96 rounded-full opacity-45 blur-3xl"
-          style={{
-            background: 'radial-gradient(circle, var(--color-glow-soft) 0%, transparent 72%)',
-          }}
-        />
-
-        <div className="apokrin-container relative">
-          <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-12">
-            {/* Left Column: Title, Subtitle & Primary CTA */}
-            <motion.div
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="lg:col-span-6"
-            >
-              <SectionBadgeWithDot label="Custom Software & Digital Engineering" />
-
-              <h1
-                id="app-dev-hero-heading"
-                style={{ textWrap: 'balance' }}
-                className="apokrin-heading-hero mt-4 font-display font-extrabold text-[#0A1128]"
-              >
-                Application Development{' '}
-                <span className="apokrin-gradient-text">Services</span>
-              </h1>
-
-              <p className="mt-4 max-w-xl font-display text-lg font-bold tracking-tight text-[#1E293B] sm:text-xl">
-                Empowering Your Digital Vision with Scalable, Tailored Applications.
-              </p>
-
-              <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#475569] sm:text-base">
-                From strategic architecture consulting to native iOS, Android, and modern web
-                engineering, Apokrin builds resilient software tailored to your enterprise goals.
-              </p>
-
-              <div className="mt-8 flex flex-wrap items-center gap-3.5">
-                <button
-                  type="button"
-                  onClick={scrollToCapabilities}
-                  className="apokrin-btn-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary-strong)] focus-visible:ring-offset-2"
-                >
-                  <span>Explore Our Solutions</span>
-                  <ArrowDown className="h-4 w-4" aria-hidden="true" />
-                </button>
-              </div>
-            </motion.div>
-
-            {/* Right Column: Interactive 3D Application Architecture Diagram */}
-            <motion.div
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="relative lg:col-span-6"
-            >
-              <ServiceArchitectureDiagram3D
-                variant="app-dev"
-                prefersReducedMotion={Boolean(prefersReducedMotion)}
-              />
-            </motion.div>
-          </div>
-        </div>
-      </section>
+    <ServicePageTemplate
+      serviceId="application-development"
+      onPrimaryCta={scrollToCapabilities}
+      onSecondaryCta={() => onNavigate('contact')}
+      onOpenBriefing={onOpenBriefing}
+    >
 
       {/* =====================================================================
           SECTION 2: INTRODUCTION (Asymmetric Split Layout)
@@ -1134,6 +1068,6 @@ export function ApplicationDevelopmentPage({
           </motion.div>
         </div>
       </section>
-    </div>
+    </ServicePageTemplate>
   );
 }

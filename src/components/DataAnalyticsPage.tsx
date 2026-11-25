@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {
   Activity,
-  ArrowDown,
   ArrowRight,
   BarChart3,
   CheckCircle2,
@@ -22,7 +21,7 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { PracticeArea, ScreenId } from '../data/apokrinData';
 import { useTheme } from '../theme/themeConfig';
-import { DataAnalyticsDiagram3D } from './DataAnalyticsDiagram3D';
+import { ServicePageTemplate } from './services/ServicePageTemplate';
 
 interface DataAnalyticsPageProps {
   onNavigate: (screen: ScreenId, practice?: PracticeArea, sectionId?: string) => void;
@@ -132,7 +131,7 @@ const WHY_APOKRIN_ITEMS: DifferentiatorItem[] = [
   },
 ];
 
-export function DataAnalyticsPage({ onOpenBriefing }: DataAnalyticsPageProps) {
+export function DataAnalyticsPage({ onNavigate, onOpenBriefing }: DataAnalyticsPageProps) {
   const { themeConfig } = useTheme();
   const prefersReducedMotion = useReducedMotion();
 
@@ -155,79 +154,12 @@ export function DataAnalyticsPage({ onOpenBriefing }: DataAnalyticsPageProps) {
     solutionFilter === 'all' || solutionFilter === id;
 
   return (
-    <div className="relative overflow-x-hidden bg-white">
-      {/* =====================================================================
-          SECTION 1: HERO – LIGHT THEME CLAYMORPHISM + INTERACTIVE ANALYTICS PREVIEW
-         ===================================================================== */}
-      <section
-        aria-labelledby="data-analytics-hero-heading"
-        className="apokrin-hero-light relative overflow-hidden border-b border-[#E2E8F0] py-12 sm:py-16 lg:py-20"
-      >
-        {/* Subtle ambient theme glow */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-24 top-0 h-96 w-96 rounded-full opacity-45 blur-3xl"
-          style={{
-            background: 'radial-gradient(circle, var(--color-glow-soft) 0%, transparent 72%)',
-          }}
-        />
-
-        <div className="apokrin-container relative">
-          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
-            {/* Left Column: Typography, Value Prop & Clear CTA */}
-            <motion.div
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="lg:col-span-6"
-            >
-              <span className="apokrin-badge inline-flex items-center rounded-full px-3.5 py-1 text-xs font-semibold">
-                Data Analytics Solutions
-              </span>
-
-              <h1
-                id="data-analytics-hero-heading"
-                style={{ textWrap: 'balance' }}
-                className="apokrin-heading-hero mt-4 font-display font-extrabold text-[#0A1128]"
-              >
-                Data Analytics Solutions{' '}
-                <span className="apokrin-gradient-text">Powered by Apokrin</span>
-              </h1>
-
-              <p className="mt-4 font-display text-lg font-bold tracking-tight text-[#1E293B] sm:text-xl">
-                Smarter Insights. Faster Decisions. Real Growth.
-              </p>
-
-              <p className="mt-4 max-w-xl text-sm leading-relaxed text-[#475569] sm:text-base">
-                Transform complex enterprise data into clear operational intelligence across
-                marketing performance, customer segmentation, risk governance, interactive
-                visualization, and social engagement.
-              </p>
-
-              <div className="mt-8 flex flex-wrap items-center gap-3.5">
-                <button
-                  type="button"
-                  onClick={scrollToSolutions}
-                  className="apokrin-btn-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary-strong)] focus-visible:ring-offset-2"
-                >
-                  <span>Explore Our Solutions</span>
-                  <ArrowDown className="h-4 w-4" aria-hidden="true" />
-                </button>
-              </div>
-            </motion.div>
-
-            {/* Right Column: Interactive 3D Data Analytics Architecture Diagram */}
-            <motion.div
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="relative lg:col-span-6"
-            >
-              <DataAnalyticsDiagram3D prefersReducedMotion={Boolean(prefersReducedMotion)} />
-            </motion.div>
-          </div>
-        </div>
-      </section>
+    <ServicePageTemplate
+      serviceId="data-analytics"
+      onPrimaryCta={scrollToSolutions}
+      onSecondaryCta={() => onNavigate('contact')}
+      onOpenBriefing={onOpenBriefing}
+    >
 
       {/* =====================================================================
           SECTION 2: ANALYTICS OVERVIEW (Asymmetric Bento Grid)
@@ -1254,6 +1186,6 @@ export function DataAnalyticsPage({ onOpenBriefing }: DataAnalyticsPageProps) {
           </motion.div>
         </div>
       </section>
-    </div>
+    </ServicePageTemplate>
   );
 }

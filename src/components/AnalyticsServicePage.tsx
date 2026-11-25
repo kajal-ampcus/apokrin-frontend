@@ -1,8 +1,9 @@
 import { useState } from 'react';
-import { ArrowRight, Bell, Compass, Layers, Sparkles } from 'lucide-react';
+import { ArrowRight, Bell, Compass, Layers } from 'lucide-react';
 import { motion, useReducedMotion } from 'motion/react';
 import { PracticeArea, ScreenId } from '../data/apokrinData';
 import { AnalyticsFocusMode, AnalyticsShowcase3D } from './AnalyticsShowcase3D';
+import { ServicePageTemplate } from './services/ServicePageTemplate';
 
 interface AnalyticsServicePageProps {
   onNavigate: (screen: ScreenId, practice?: PracticeArea, sectionId?: string) => void;
@@ -22,77 +23,30 @@ export function AnalyticsServicePage({
   const prefersReducedMotion = useReducedMotion();
   const [focusMode, setFocusMode] = useState<AnalyticsFocusMode>('overview');
 
+  const scrollToPreview = () => {
+    const target = document.getElementById('analytics-preview');
+    if (target) {
+      target.scrollIntoView({
+        behavior: prefersReducedMotion ? 'auto' : 'smooth',
+        block: 'start',
+      });
+    }
+  };
+
   return (
-    <div className="relative overflow-x-hidden bg-[#F8FAFC]">
-      {/* =====================================================================
-          SECTION 1: COMPACT HERO BANNER (Preserving Redesigned Apokrin UI)
-         ===================================================================== */}
-      <section
-        aria-labelledby="analytics-coming-soon-heading"
-        className="apokrin-hero-light relative overflow-hidden border-b border-[#E2E8F0] py-8 sm:py-10 lg:py-12"
-      >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-0 h-72 w-[620px] -translate-x-1/2 rounded-full opacity-45 blur-3xl"
-          style={{
-            background:
-              'radial-gradient(circle, rgba(37,99,235,0.16) 0%, rgba(124,58,237,0.12) 48%, rgba(6,182,212,0.08) 100%)',
-          }}
-        />
-
-        <div className="apokrin-container relative text-center">
-          <motion.div
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 12 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-            className="mx-auto max-w-3xl"
-          >
-            {/* Gradient COMING SOON Badge */}
-            <span
-              className="inline-flex items-center gap-2 rounded-full px-4 py-1 text-xs font-bold tracking-[0.14em] text-white shadow-[0_6px_18px_-4px_rgba(37,99,235,0.42)]"
-              style={{
-                background: 'linear-gradient(135deg, #2563EB 0%, #7C3AED 55%, #06B6D4 100%)',
-              }}
-            >
-              <Sparkles className="h-3.5 w-3.5" aria-hidden="true" />
-              <span>COMING SOON</span>
-            </span>
-
-            <h1
-              id="analytics-coming-soon-heading"
-              style={{ textWrap: 'balance' }}
-              className="apokrin-heading-hero mt-4 font-display font-extrabold text-[#0A1128]"
-            >
-              Analytics{' '}
-              <span
-                className="bg-clip-text text-transparent"
-                style={{
-                  backgroundImage:
-                    'linear-gradient(90deg, #2563EB 0%, #7C3AED 52%, #06B6D4 100%)',
-                }}
-              >
-                Solutions
-              </span>
-            </h1>
-
-            <p className="mt-3 font-display text-lg font-bold tracking-tight text-[#1E293B] sm:text-xl">
-              Something Intelligent Is Coming.
-            </p>
-
-            <p className="mx-auto mt-2.5 max-w-2xl text-sm leading-relaxed text-[#475569] sm:text-base">
-              We&apos;re building smarter analytics experiences to transform your business data into
-              meaningful insights.
-            </p>
-          </motion.div>
-        </div>
-      </section>
-
+    <ServicePageTemplate
+      serviceId="analytics"
+      onPrimaryCta={scrollToPreview}
+      onSecondaryCta={() => onNavigate('contact')}
+      onOpenBriefing={onOpenBriefing}
+    >
       {/* =====================================================================
           SECTION 2: CENTRAL 3D ANIMATED COMING SOON SHOWCASE (Compact & Balanced)
          ===================================================================== */}
       <section
+        id="analytics-preview"
         aria-label="Interactive 3D Analytics Preview"
-        className="relative py-8 sm:py-10 lg:py-12"
+        className="relative bg-[#F8FAFC] py-8 sm:py-10 lg:py-12"
       >
         <div className="apokrin-container">
           <motion.div
@@ -236,6 +190,6 @@ export function AnalyticsServicePage({
           </motion.div>
         </div>
       </section>
-    </div>
+    </ServicePageTemplate>
   );
 }

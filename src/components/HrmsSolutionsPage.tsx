@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  ArrowDown,
   ArrowRight,
   Award,
   BarChart3,
@@ -16,10 +15,10 @@ import {
   Workflow,
 } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import hrmsHeroBackdropImg from '../assets/images/hrms_hero_backdrop_1794911012390.jpg';
 import hrmsWorkforceImg from '../assets/images/hrms_workforce_platform_1794911012639.jpg';
 import { PracticeArea, ScreenId } from '../data/apokrinData';
 import { useTheme } from '../theme/themeConfig';
+import { ServicePageTemplate } from './services/ServicePageTemplate';
 
 interface HrmsSolutionsPageProps {
   onNavigate: (screen: ScreenId, practice?: PracticeArea, sectionId?: string) => void;
@@ -165,7 +164,6 @@ export function HrmsSolutionsPage({ onNavigate, onOpenBriefing }: HrmsSolutionsP
   const { themeConfig } = useTheme();
   const prefersReducedMotion = useReducedMotion();
 
-  const [heroImgFailed, setHeroImgFailed] = useState(false);
   const [introImgFailed, setIntroImgFailed] = useState(false);
   const [activeWhyIdx, setActiveWhyIdx] = useState<number>(0);
 
@@ -182,155 +180,12 @@ export function HrmsSolutionsPage({ onNavigate, onOpenBriefing }: HrmsSolutionsP
   };
 
   return (
-    <div className="relative overflow-x-hidden bg-white">
-      {/* =====================================================================
-          SECTION 1: HERO – APOKRIN HRMS SOLUTION (Background Image + Dark Overlay)
-         ===================================================================== */}
-      <section
-        aria-labelledby="hrms-hero-heading"
-        className="relative isolate overflow-hidden border-b border-[#E2E8F0] bg-[#0A1128]"
-      >
-        {!heroImgFailed && (
-          <img
-            src={hrmsHeroBackdropImg}
-            alt="Modern enterprise technology atrium supporting collaborative people-first operations"
-            referrerPolicy="no-referrer"
-            onError={() => setHeroImgFailed(true)}
-            className="pointer-events-none absolute inset-0 -z-20 h-full w-full object-cover object-center opacity-55"
-          />
-        )}
-
-        {/* Dark Scrim + Theme Ambient Radial Glow */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10"
-          style={{
-            background:
-              'linear-gradient(180deg, rgba(10,17,40,0.78) 0%, rgba(10,17,40,0.72) 52%, rgba(10,17,40,0.88) 100%)',
-          }}
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-96 w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30 blur-3xl"
-          style={{
-            background: `radial-gradient(circle, ${themeConfig.primary} 0%, transparent 70%)`,
-          }}
-        />
-
-        <div className="apokrin-container relative py-12 sm:py-16 lg:py-20">
-          {/* Floating Left Intelligent HR Cards (Desktop) */}
-          <motion.div
-            aria-hidden="true"
-            animate={prefersReducedMotion ? undefined : { y: [0, -8, 0] }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
-            className="pointer-events-none absolute left-6 top-10 hidden items-center gap-3 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white shadow-xl backdrop-blur-md xl:flex"
-          >
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-inner"
-              style={{
-                background: `linear-gradient(135deg, ${themeConfig.primary} 0%, ${themeConfig.secondary} 100%)`,
-              }}
-            >
-              <UserCheck className="h-4.5 w-4.5" />
-            </div>
-            <div>
-              <p className="text-xs font-bold leading-tight">Unified HR Platform</p>
-              <p className="text-[11px] text-slate-300">Payroll · Leave · Attendance</p>
-            </div>
-          </motion.div>
-
-          <motion.div
-            aria-hidden="true"
-            animate={prefersReducedMotion ? undefined : { y: [0, 7, 0] }}
-            transition={{ duration: 5.4, repeat: Infinity, ease: 'easeInOut', delay: 0.6 }}
-            className="pointer-events-none absolute bottom-10 left-12 hidden items-center gap-2.5 rounded-2xl border border-white/15 bg-white/10 px-3.5 py-2.5 text-white shadow-xl backdrop-blur-md xl:flex"
-          >
-            <Workflow className="h-4 w-4" style={{ color: themeConfig.accent }} />
-            <span className="text-xs font-semibold">AI Recruitment &amp; ATS</span>
-          </motion.div>
-
-          {/* Floating Right Lifecycle & Governance Cards (Desktop) */}
-          <motion.div
-            aria-hidden="true"
-            animate={prefersReducedMotion ? undefined : { y: [0, -9, 0] }}
-            transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
-            className="pointer-events-none absolute right-6 top-10 hidden items-center gap-3 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white shadow-xl backdrop-blur-md xl:flex"
-          >
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-xl text-white"
-              style={{
-                background: `linear-gradient(135deg, ${themeConfig.secondary} 0%, ${themeConfig.primaryStrong} 100%)`,
-              }}
-            >
-              <ShieldCheck className="h-4.5 w-4.5" />
-            </div>
-            <div>
-              <p className="text-xs font-bold leading-tight">Role-Based Governance</p>
-              <p className="text-[11px] text-slate-300">Compliance &amp; Workforce Analytics</p>
-            </div>
-          </motion.div>
-
-          <motion.div
-            aria-hidden="true"
-            animate={prefersReducedMotion ? undefined : { y: [0, 8, 0] }}
-            transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 0.9 }}
-            className="pointer-events-none absolute bottom-10 right-14 hidden items-center gap-2.5 rounded-2xl border border-white/15 bg-white/10 px-3.5 py-2.5 text-white shadow-xl backdrop-blur-md xl:flex"
-          >
-            <Award className="h-4 w-4" style={{ color: themeConfig.accent }} />
-            <span className="text-xs font-semibold">Engagement &amp; Retention</span>
-          </motion.div>
-
-          {/* Centered Hero Typography & Actions */}
-          <motion.div
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="mx-auto max-w-2xl text-center"
-          >
-            <span
-              className="inline-flex items-center rounded-full border px-4 py-1 text-xs font-semibold tracking-wide text-white backdrop-blur-sm"
-              style={{
-                borderColor: `${themeConfig.accent}66`,
-                backgroundColor: `${themeConfig.primary}28`,
-              }}
-            >
-              Intelligent Workforce Platform
-            </span>
-
-            <h1
-              id="hrms-hero-heading"
-              style={{ textWrap: 'balance' }}
-              className="apokrin-heading-hero mt-5 font-display font-extrabold text-white"
-            >
-              Apokrin{' '}
-              <span
-                className="bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: `linear-gradient(90deg, ${themeConfig.accent} 0%, #FFFFFF 48%, ${themeConfig.secondary} 100%)`,
-                }}
-              >
-                HRMS Solution
-              </span>
-            </h1>
-
-            <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-relaxed text-slate-200 sm:text-lg">
-              Streamline HR operations, enhance employee engagement, and unlock business growth with
-              Apokrin&apos;s intelligent HRMS built for the IT industry.
-            </p>
-
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-3.5">
-              <button
-                type="button"
-                onClick={scrollToCapabilities}
-                className="apokrin-btn-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1128]"
-              >
-                <span>Explore Capabilities</span>
-                <ArrowDown className="h-4 w-4" aria-hidden="true" />
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+    <ServicePageTemplate
+      serviceId="hrms"
+      onPrimaryCta={scrollToCapabilities}
+      onSecondaryCta={() => onNavigate('contact')}
+      onOpenBriefing={onOpenBriefing}
+    >
 
       {/* =====================================================================
           SECTION 2: INTRODUCTION – INTELLIGENT HRMS SOLUTIONS FOR THE IT INDUSTRY
@@ -852,6 +707,6 @@ export function HrmsSolutionsPage({ onNavigate, onOpenBriefing }: HrmsSolutionsP
           </div>
         </div>
       </section>
-    </div>
+    </ServicePageTemplate>
   );
 }

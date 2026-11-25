@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import {
   Activity,
-  ArrowDown,
   ArrowLeft,
   ArrowRight,
   Blocks,
@@ -23,10 +22,9 @@ import {
   Zap,
 } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
-import heroBackdropImg from '../assets/images/infrastructure_hero_backdrop_1794909868591.jpg';
-import operationsCenterImg from '../assets/images/infrastructure_operations_center_1794909869797.jpg';
 import { PracticeArea, ScreenId } from '../data/apokrinData';
 import { useTheme } from '../theme/themeConfig';
+import { ServicePageTemplate } from './services/ServicePageTemplate';
 
 interface InfrastructureManagementPageProps {
   onNavigate: (screen: ScreenId, practice?: PracticeArea, sectionId?: string) => void;
@@ -294,8 +292,6 @@ export function InfrastructureManagementPage({
   const { themeConfig } = useTheme();
   const prefersReducedMotion = useReducedMotion();
 
-  const [heroImgFailed, setHeroImgFailed] = useState(false);
-  const [opsImgFailed, setOpsImgFailed] = useState(false);
   const [activeCategory, setActiveCategory] = useState<CapabilityCategory>('infrastructure');
   const [activeServiceId, setActiveServiceId] = useState<string>(INFRASTRUCTURE_SERVICES[0].id);
 
@@ -333,156 +329,12 @@ export function InfrastructureManagementPage({
   };
 
   return (
-    <div className="relative overflow-x-hidden">
-      {/* =====================================================================
-          SECTION 1: EXECUTIVE HERO – INFRASTRUCTURE MANAGEMENT SERVICES
-         ===================================================================== */}
-      <section
-        aria-labelledby="infra-hero-heading"
-        className="relative isolate overflow-hidden border-b border-[#1E293B] bg-[#0A1128] py-12 text-white sm:py-16 lg:py-20"
-      >
-        {/* Subtle Architectural Background Image + Dark Scrim */}
-        {!heroImgFailed && (
-          <img
-            src={heroBackdropImg}
-            alt=""
-            aria-hidden="true"
-            referrerPolicy="no-referrer"
-            onError={() => setHeroImgFailed(true)}
-            className="pointer-events-none absolute inset-0 -z-20 h-full w-full object-cover object-center opacity-35"
-          />
-        )}
-
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10"
-          style={{
-            background:
-              'linear-gradient(105deg, rgba(10,17,40,0.95) 0%, rgba(10,17,40,0.84) 52%, rgba(10,17,40,0.72) 100%)',
-          }}
-        />
-
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-24 -top-24 -z-10 h-96 w-96 rounded-full opacity-25 blur-3xl"
-          style={{ background: themeConfig.primary }}
-        />
-
-        <div className="apokrin-container relative">
-          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
-            {/* Left 6 Cols: Crisp Value Proposition */}
-            <motion.div
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-              className="lg:col-span-6"
-            >
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3.5 py-1 text-xs font-semibold text-slate-100 backdrop-blur-sm">
-                <span
-                  aria-hidden="true"
-                  className="h-2 w-2 rounded-full"
-                  style={{ background: 'var(--color-btn-gradient)' }}
-                />
-                <span>Enterprise IT Infrastructure</span>
-              </span>
-
-              <h1
-                id="infra-hero-heading"
-                style={{ textWrap: 'balance' }}
-                className="apokrin-heading-hero mt-5 font-display font-extrabold text-white"
-              >
-                Infrastructure Management{' '}
-                <span style={{ color: themeConfig.accent }}>Services</span>
-              </h1>
-
-              <p className="mt-4 max-w-xl text-base leading-relaxed text-slate-300 sm:text-lg">
-                Scalable, secure, and automated IT operations spanning on-premise data centers,
-                hybrid environments, and global cloud backbones.
-              </p>
-
-              <div className="mt-7 flex flex-wrap items-center gap-3.5">
-                <button
-                  type="button"
-                  onClick={scrollToCapabilities}
-                  className="apokrin-btn-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1128]"
-                >
-                  <span>Explore Capabilities</span>
-                  <ArrowDown className="h-4 w-4" aria-hidden="true" />
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => onNavigate('contact')}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/8 px-6 py-3 text-sm font-semibold text-white whitespace-nowrap shrink-0 transition-colors hover:bg-white/14 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/80 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0A1128]"
-                >
-                  <span>Contact Sales</span>
-                  <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                </button>
-              </div>
-            </motion.div>
-
-            {/* Right 6 Cols: Clean Framed Operations Visual */}
-            <motion.div
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 18 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="lg:col-span-6"
-            >
-              <div className="overflow-hidden rounded-[1.85rem] border border-white/15 bg-white/6 p-2.5 shadow-[0_28px_60px_-24px_rgba(0,0,0,0.55)] backdrop-blur-md">
-                <div className="relative overflow-hidden rounded-[1.35rem] bg-[#0F172A]">
-                  {opsImgFailed ? (
-                    <div className="flex aspect-[16/10] flex-col items-center justify-center gap-3 p-8 text-center">
-                      <div
-                        className="flex h-14 w-14 items-center justify-center rounded-2xl text-white"
-                        style={{ background: 'var(--color-btn-gradient)' }}
-                      >
-                        <Server className="h-7 w-7" aria-hidden="true" />
-                      </div>
-                      <p className="font-display text-base font-bold text-white">
-                        Enterprise IT Operations Center
-                      </p>
-                      <p className="max-w-xs text-xs text-slate-300">
-                        Proactive monitoring across networks, servers, storage, and hybrid cloud
-                        workloads.
-                      </p>
-                    </div>
-                  ) : (
-                    <img
-                      src={operationsCenterImg}
-                      alt="Enterprise IT infrastructure and network operations center with engineering specialists"
-                      referrerPolicy="no-referrer"
-                      onError={() => setOpsImgFailed(true)}
-                      className="aspect-[16/10] w-full object-cover"
-                    />
-                  )}
-                </div>
-
-                {/* Clean 3-Pillar Architectural Caption Strip */}
-                <div className="grid grid-cols-3 divide-x divide-white/10 px-2 pb-1.5 pt-3 text-center">
-                  <div className="px-2">
-                    <p className="font-mono text-[11px] font-semibold text-slate-400">Environments</p>
-                    <p className="mt-0.5 font-display text-xs font-bold text-white sm:text-sm">
-                      On-Prem &amp; Cloud
-                    </p>
-                  </div>
-                  <div className="px-2">
-                    <p className="font-mono text-[11px] font-semibold text-slate-400">Coverage</p>
-                    <p className="mt-0.5 font-display text-xs font-bold text-white sm:text-sm">
-                      24/7 Operations
-                    </p>
-                  </div>
-                  <div className="px-2">
-                    <p className="font-mono text-[11px] font-semibold text-slate-400">Practice</p>
-                    <p className="mt-0.5 font-display text-xs font-bold text-white sm:text-sm">
-                      11 Core Services
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </motion.div>
-          </div>
-        </div>
-      </section>
+    <ServicePageTemplate
+      serviceId="infrastructure-management"
+      onPrimaryCta={scrollToCapabilities}
+      onSecondaryCta={() => onNavigate('contact')}
+      onOpenBriefing={onOpenBriefing}
+    >
 
       {/* =====================================================================
           SECTION 2: STRATEGIC OVERVIEW – RESILIENT DIGITAL BACKBONES
@@ -1023,6 +875,6 @@ export function InfrastructureManagementPage({
           </motion.div>
         </div>
       </section>
-    </div>
+    </ServicePageTemplate>
   );
 }

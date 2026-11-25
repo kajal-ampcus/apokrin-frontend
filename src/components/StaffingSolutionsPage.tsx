@@ -4,15 +4,13 @@ import {
   Check,
   CheckCircle2,
   Network,
-  Sparkles,
   UserCheck,
-  Workflow,
 } from 'lucide-react';
 import { motion, useInView, useReducedMotion } from 'motion/react';
-import heroBackdropImg from '../assets/images/staffing_hero_backdrop_1794739946704.jpg';
 import introPlatformImg from '../assets/images/staffing_intro_platform_1794739946943.jpg';
 import { PracticeArea, ScreenId } from '../data/apokrinData';
 import { useTheme } from '../theme/themeConfig';
+import { ServicePageTemplate } from './services/ServicePageTemplate';
 import {
   BenefitClayIcon3D,
   BenefitIconId,
@@ -183,12 +181,12 @@ const TASK_ORDER_STEPS: {
 ];
 
 export function StaffingSolutionsPage({
+  onNavigate,
   onOpenBriefing,
 }: StaffingSolutionsPageProps) {
   const { themeConfig } = useTheme();
   const prefersReducedMotion = useReducedMotion();
 
-  const [heroImgFailed, setHeroImgFailed] = useState(false);
   const [introImgFailed, setIntroImgFailed] = useState(false);
   const [selectedModel, setSelectedModel] = useState<string>('RPO');
   const [activeBenefit, setActiveBenefit] = useState<number>(0);
@@ -219,154 +217,12 @@ export function StaffingSolutionsPage({
   };
 
   return (
-    <div className="relative overflow-x-hidden bg-white">
-      {/* =====================================================================
-          1. STAFFING HERO SECTION
-         ===================================================================== */}
-      <section
-        aria-labelledby="staffing-hero-heading"
-        className="relative isolate overflow-hidden border-b border-[#E2E8F0] bg-[#0A1128]"
-      >
-        {/* Background Visual */}
-        {!heroImgFailed && (
-          <img
-            src={heroBackdropImg}
-            alt="Enterprise technology headquarters and talent collaboration hub"
-            referrerPolicy="no-referrer"
-            onError={() => setHeroImgFailed(true)}
-            className="pointer-events-none absolute inset-0 -z-20 h-full w-full object-cover object-center opacity-55"
-          />
-        )}
-
-        {/* Subtle Dark Scrim + Theme Ambient Radial Glow */}
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute inset-0 -z-10"
-          style={{
-            background:
-              'linear-gradient(180deg, rgba(10,17,40,0.78) 0%, rgba(10,17,40,0.72) 52%, rgba(10,17,40,0.88) 100%)',
-          }}
-        />
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute left-1/2 top-1/2 -z-10 h-96 w-[640px] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30 blur-3xl"
-          style={{
-            background: `radial-gradient(circle, ${themeConfig.primary} 0%, transparent 70%)`,
-          }}
-        />
-
-        <div className="apokrin-container relative py-14 sm:py-16 lg:py-20">
-          {/* Floating Left 3D Recruitment Elements (Desktop) */}
-          <motion.div
-            aria-hidden="true"
-            animate={prefersReducedMotion ? undefined : { y: [0, -8, 0] }}
-            transition={{ duration: 4.8, repeat: Infinity, ease: 'easeInOut' }}
-            className="pointer-events-none absolute left-6 top-12 hidden items-center gap-3 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white shadow-xl backdrop-blur-md xl:flex"
-          >
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-xl text-white shadow-inner"
-              style={{
-                background: `linear-gradient(135deg, ${themeConfig.primary} 0%, ${themeConfig.secondary} 100%)`,
-              }}
-            >
-              <UserCheck className="h-4.5 w-4.5" />
-            </div>
-            <div>
-              <p className="text-xs font-bold leading-tight">Candidate Profiles</p>
-              <p className="text-[11px] text-slate-300">AI-Verified Matching</p>
-            </div>
-          </motion.div>
-
-          <motion.div
-            aria-hidden="true"
-            animate={prefersReducedMotion ? undefined : { y: [0, 7, 0] }}
-            transition={{ duration: 5.4, repeat: Infinity, ease: 'easeInOut', delay: 0.6 }}
-            className="pointer-events-none absolute bottom-10 left-12 hidden items-center gap-2.5 rounded-2xl border border-white/15 bg-white/10 px-3.5 py-2.5 text-white shadow-xl backdrop-blur-md xl:flex"
-          >
-            <Workflow className="h-4 w-4" style={{ color: themeConfig.accent }} />
-            <span className="text-xs font-semibold">Digital Hiring Pipeline</span>
-          </motion.div>
-
-          {/* Floating Right 3D Talent Network & Vendor Elements (Desktop) */}
-          <motion.div
-            aria-hidden="true"
-            animate={prefersReducedMotion ? undefined : { y: [0, -9, 0] }}
-            transition={{ duration: 5.2, repeat: Infinity, ease: 'easeInOut', delay: 0.4 }}
-            className="pointer-events-none absolute right-6 top-12 hidden items-center gap-3 rounded-2xl border border-white/15 bg-white/10 px-4 py-3 text-white shadow-xl backdrop-blur-md xl:flex"
-          >
-            <div
-              className="flex h-9 w-9 items-center justify-center rounded-xl text-white"
-              style={{
-                background: `linear-gradient(135deg, ${themeConfig.secondary} 0%, ${themeConfig.primaryStrong} 100%)`,
-              }}
-            >
-              <Network className="h-4.5 w-4.5" />
-            </div>
-            <div>
-              <p className="text-xs font-bold leading-tight">Talent &amp; Vendor Hub</p>
-              <p className="text-[11px] text-slate-300">Unified VMS Governance</p>
-            </div>
-          </motion.div>
-
-          <motion.div
-            aria-hidden="true"
-            animate={prefersReducedMotion ? undefined : { y: [0, 8, 0] }}
-            transition={{ duration: 4.5, repeat: Infinity, ease: 'easeInOut', delay: 0.9 }}
-            className="pointer-events-none absolute bottom-10 right-14 hidden items-center gap-2.5 rounded-2xl border border-white/15 bg-white/10 px-3.5 py-2.5 text-white shadow-xl backdrop-blur-md xl:flex"
-          >
-            <Sparkles className="h-4 w-4" style={{ color: themeConfig.accent }} />
-            <span className="text-xs font-semibold">Task Order Automation</span>
-          </motion.div>
-
-          {/* Centered Hero Typography & Actions */}
-          <motion.div
-            initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="mx-auto max-w-4xl text-center"
-          >
-            <span
-              className="inline-flex items-center rounded-full border px-4 py-1 text-xs font-semibold tracking-wide text-white backdrop-blur-sm"
-              style={{
-                borderColor: `${themeConfig.accent}66`,
-                backgroundColor: `${themeConfig.primary}28`,
-              }}
-            >
-              Apokrin Enterprise Staffing Platform
-            </span>
-
-            <h1
-              id="staffing-hero-heading"
-              style={{ textWrap: 'balance' }}
-              className="apokrin-heading-hero mt-5 font-display font-extrabold text-white"
-            >
-              Staffing Solutions by Apokrin |{' '}
-              <span
-                className="bg-clip-text text-transparent"
-                style={{
-                  backgroundImage: `linear-gradient(90deg, ${themeConfig.accent} 0%, #FFFFFF 48%, ${themeConfig.secondary} 100%)`,
-                }}
-              >
-                End-to-End Recruitment &amp; Vendor Management
-              </span>
-            </h1>
-
-            <p className="mx-auto mt-4 max-w-2xl text-base font-medium leading-relaxed text-slate-200 sm:text-lg">
-              Smart Hiring Meets Strategic Vendor Management
-            </p>
-
-            <div className="mt-7 flex flex-wrap items-center justify-center gap-3.5">
-              <button
-                type="button"
-                onClick={() => scrollToSection('engagement-models')}
-                className="inline-flex items-center gap-2 rounded-full border border-white/25 bg-white/10 px-6 py-3 text-sm font-semibold text-white backdrop-blur-sm transition-colors hover:bg-white/20 whitespace-nowrap shrink-0"
-              >
-                <span>Explore Engagement Models</span>
-              </button>
-            </div>
-          </motion.div>
-        </div>
-      </section>
+    <ServicePageTemplate
+      serviceId="staffing"
+      onPrimaryCta={() => scrollToSection('engagement-models')}
+      onSecondaryCta={() => onNavigate('contact')}
+      onOpenBriefing={onOpenBriefing}
+    >
 
       {/* =====================================================================
           2. STAFFING INTRODUCTION SECTION (2-Column: Copy Left, Single Visual + Floating Clay Elements Right)
@@ -1088,6 +944,6 @@ export function StaffingSolutionsPage({
           </div>
         </div>
       </section>
-    </div>
+    </ServicePageTemplate>
   );
 }

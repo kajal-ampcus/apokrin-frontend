@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import {
-  ArrowDown,
   ArrowRight,
   BarChart3,
   BrainCircuit,
@@ -23,7 +22,7 @@ import {
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { PracticeArea, ScreenId } from '../data/apokrinData';
 import { useTheme } from '../theme/themeConfig';
-import { ServiceArchitectureDiagram3D } from './ServiceArchitectureDiagram3D';
+import { ServicePageTemplate } from './services/ServicePageTemplate';
 
 interface BigDataPageProps {
   onNavigate: (screen: ScreenId, practice?: PracticeArea, sectionId?: string) => void;
@@ -274,73 +273,12 @@ export function BigDataPage({ onNavigate, onOpenBriefing }: BigDataPageProps) {
   };
 
   return (
-    <div className="relative overflow-x-hidden bg-white">
-      {/* =====================================================================
-          SECTION 1: HERO – BIG DATA SOLUTIONS + INTERACTIVE PIPELINE STUDIO
-         ===================================================================== */}
-      <section
-        aria-labelledby="big-data-hero-heading"
-        className="apokrin-hero-light relative overflow-hidden border-b border-[#E2E8F0] py-10 sm:py-14 lg:py-16"
-      >
-        <div
-          aria-hidden="true"
-          className="pointer-events-none absolute -right-24 top-0 h-96 w-96 rounded-full opacity-45 blur-3xl"
-          style={{
-            background: 'radial-gradient(circle, var(--color-glow-soft) 0%, transparent 72%)',
-          }}
-        />
-
-        <div className="apokrin-container relative">
-          <div className="grid grid-cols-1 items-center gap-10 lg:grid-cols-12 lg:gap-12">
-            {/* Left Column: Title, Subtitle & Action CTAs */}
-            <motion.div
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-              className="lg:col-span-6"
-            >
-              <SectionBadgeWithDot label="Enterprise Data Engineering & AI" />
-
-              <h1
-                id="big-data-hero-heading"
-                style={{ textWrap: 'balance' }}
-                className="apokrin-heading-hero mt-4 font-display font-extrabold text-[#0A1128]"
-              >
-                Big Data <span className="apokrin-gradient-text">Solutions</span>
-              </h1>
-
-              <p className="mt-4 max-w-xl text-base leading-relaxed text-[#475569] sm:text-lg">
-                Empowering businesses with advanced Big Data solutions that drive insights,
-                innovation, and intelligent decision-making.
-              </p>
-
-              <div className="mt-7 flex flex-wrap items-center gap-3.5">
-                <button
-                  type="button"
-                  onClick={scrollToCapabilities}
-                  className="apokrin-btn-primary inline-flex items-center gap-2 rounded-full px-6 py-3 text-sm font-semibold whitespace-nowrap shrink-0 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[var(--color-primary-strong)] focus-visible:ring-offset-2"
-                >
-                  <span>Explore Our Solutions</span>
-                  <ArrowDown className="h-4 w-4" aria-hidden="true" />
-                </button>
-              </div>
-            </motion.div>
-
-            {/* Right Column: Interactive 3D Big Data Lakehouse Diagram */}
-            <motion.div
-              initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.55, delay: 0.08, ease: [0.16, 1, 0.3, 1] }}
-              className="relative lg:col-span-6"
-            >
-              <ServiceArchitectureDiagram3D
-                variant="big-data"
-                prefersReducedMotion={Boolean(prefersReducedMotion)}
-              />
-            </motion.div>
-          </div>
-        </div>
-      </section>
+    <ServicePageTemplate
+      serviceId="big-data"
+      onPrimaryCta={scrollToCapabilities}
+      onSecondaryCta={() => onNavigate('contact')}
+      onOpenBriefing={onOpenBriefing}
+    >
 
       {/* =====================================================================
           SECTION 2: INTRODUCTION – HARNESS REAL-TIME BIG DATA
@@ -1071,6 +1009,6 @@ export function BigDataPage({ onNavigate, onOpenBriefing }: BigDataPageProps) {
           </motion.div>
         </div>
       </section>
-    </div>
+    </ServicePageTemplate>
   );
 }

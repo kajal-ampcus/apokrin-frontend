@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { ChevronDown, Menu, X } from 'lucide-react';
 import { AnimatePresence, motion, useReducedMotion } from 'motion/react';
 import { PracticeArea, ScreenId } from '../data/apokrinData';
+import { SERVICES_CONFIG } from '../data/servicesConfig';
 import { BRAND_THEME_LIST, useTheme } from '../theme/themeConfig';
 
 interface TopBarProps {
@@ -18,17 +19,10 @@ interface NavbarServiceOption {
   practice?: PracticeArea;
 }
 
-const NAVBAR_SERVICES: NavbarServiceOption[] = [
-  { label: 'Staffing', screen: 'staffing' },
-  { label: 'Data Analytics', screen: 'data-analytics' },
-  { label: 'Application Development', screen: 'application-development' },
-  { label: 'Big Data', screen: 'big-data' },
-  { label: 'Database Management System', screen: 'database-management' },
-  { label: 'Infrastructure Management Systems', screen: 'infrastructure-management' },
-  { label: 'Mobility', screen: 'mobility' },
-  { label: 'Analytics', screen: 'analytics' },
-  { label: 'HRMS', screen: 'hrms' },
-];
+const NAVBAR_SERVICES: NavbarServiceOption[] = SERVICES_CONFIG.map((service) => ({
+  label: service.name,
+  screen: service.id,
+}));
 
 /**
  * Exact original Apokrin multicolor logo asset (/assets/aistudio/image_e1054fa1.png).
@@ -124,34 +118,12 @@ export function TopBar({ activeScreen, onNavigate, onOpenBriefing }: TopBarProps
     return () => window.removeEventListener('scroll', onScroll);
   }, []);
 
-  // Sync active nav when navigating via footer or cards
+  // Sync active nav when navigating via Compare Slider, footer, URL history, or cards
   useEffect(() => {
-    if (
-      activeScreen === 'staffing' ||
-      activeScreen === 'data-analytics' ||
-      activeScreen === 'application-development' ||
-      activeScreen === 'big-data' ||
-      activeScreen === 'database-management' ||
-      activeScreen === 'infrastructure-management' ||
-      activeScreen === 'mobility' ||
-      activeScreen === 'analytics' ||
-      activeScreen === 'hrms' ||
-      activeScreen === 'solutions' ||
-      activeScreen === 'benchmarks'
-    ) {
+    const matchedService = SERVICES_CONFIG.find((svc) => svc.id === activeScreen);
+    if (matchedService || activeScreen === 'solutions' || activeScreen === 'benchmarks') {
       setActiveNav('services');
-      if (activeScreen === 'staffing') setActiveServiceLabel('Staffing');
-      else if (activeScreen === 'data-analytics') setActiveServiceLabel('Data Analytics');
-      else if (activeScreen === 'application-development')
-        setActiveServiceLabel('Application Development');
-      else if (activeScreen === 'big-data') setActiveServiceLabel('Big Data');
-      else if (activeScreen === 'database-management')
-        setActiveServiceLabel('Database Management System');
-      else if (activeScreen === 'infrastructure-management')
-        setActiveServiceLabel('Infrastructure Management Systems');
-      else if (activeScreen === 'mobility') setActiveServiceLabel('Mobility');
-      else if (activeScreen === 'analytics') setActiveServiceLabel('Analytics');
-      else if (activeScreen === 'hrms') setActiveServiceLabel('HRMS');
+      setActiveServiceLabel(matchedService ? matchedService.name : null);
     } else if (activeScreen === 'about') {
       setActiveNav('about');
       setActiveServiceLabel(null);
